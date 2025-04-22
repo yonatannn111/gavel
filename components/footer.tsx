@@ -4,7 +4,7 @@ import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from "lucide-react"
 export default function Footer() {
   return (
     <footer className="bg-[#8B0000] text-white">
-      <div className="container py-12 md:py-16">
+      <div className="container py-12 px-4 md:py-16 md:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
             <h3 className="text-xl font-bold mb-4">SMU Gavel Club</h3>
