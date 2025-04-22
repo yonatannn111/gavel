@@ -27,7 +27,7 @@ export default function Home() {
               <Button asChild size="lg" className="bg-white text-[#8B0000] hover:bg-gray-100">
                 <Link href="/join">Join Us</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button asChild size="lg" variant="outline" className=" text-white bg-white/10">
                 <Link href="/about">Learn More</Link>
               </Button>
             </div>
@@ -108,14 +108,14 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-48 relative">
                 <Image 
-                  src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                  src="./events/passed000.jpg" 
                   alt="Weekly Meeting"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="p-6">
-                <div className="text-sm text-gray-500 mb-2">May 15, 2025 • 6:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">March 23, 2025 • 03:00 PM</div>
                 <h3 className="text-xl font-semibold mb-2">Weekly Club Meeting</h3>
                 <p className="text-gray-600 mb-4">
                   Join us for our regular meeting featuring prepared speeches, evaluations, and impromptu speaking sessions.
@@ -130,20 +130,20 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-48 relative">
                 <Image 
-                  src="https://images.unsplash.com/photo-1560439514-4e9645039924?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
-                  alt="Public Speaking Workshop"
+                  src="./events/passed.jpeg" 
+                  alt="Leadership Tranning"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="p-6">
-                <div className="text-sm text-gray-500 mb-2">May 22, 2025 • 5:30 PM</div>
-                <h3 className="text-xl font-semibold mb-2">Public Speaking Workshop</h3>
+                <div className="text-sm text-gray-500 mb-2">April 15, 2025 • 6:20 LT</div>
+                <h3 className="text-xl font-semibold mb-2">Leadership Traning</h3>
                 <p className="text-gray-600 mb-4">
                   A special workshop focused on mastering the art of persuasive speaking and effective body language.
                 </p>
                 <Button asChild className="w-full bg-[#8B0000] hover:bg-[#FF0000]">
-                  <Link href="/events">Register Now</Link>
+                  <Link href="/events">Learn More</Link>
                 </Button>
               </div>
             </div>
@@ -152,15 +152,15 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-48 relative">
                 <Image 
-                  src="https://images.unsplash.com/photo-1558403194-611308249627?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
-                  alt="Speech Contest"
+                  src="./events/upcoming.jpeg" 
+                  alt="Communications Skill Training"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="p-6">
-                <div className="text-sm text-gray-500 mb-2">June 5, 2025 • 7:00 PM</div>
-                <h3 className="text-xl font-semibold mb-2">Annual Speech Contest</h3>
+                <div className="text-sm text-gray-500 mb-2">April 24, 2025 • 6:20 LT</div>
+                <h3 className="text-xl font-semibold mb-2">Communications Skill Training</h3>
                 <p className="text-gray-600 mb-4">
                   Our flagship event where members compete in various speech categories to showcase their skills.
                 </p>

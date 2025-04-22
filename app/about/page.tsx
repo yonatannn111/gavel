@@ -4,34 +4,41 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function AboutPage() {
   const executiveCommittee = [
     {
-      name: "Sarah Chen",
+      name: "Nigest Kidane",
       role: "President",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+      image: "./members/president.jpeg"
     },
     {
-      name: "David Wong",
+      name: "Selam Meseret",
       role: "Vice President Education",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
     },
     {
-      name: "Michelle Lim",
+      name: "Hermela Yohannes",
+      role: "Vice President Public Relations",
+      image: "./members/relations.jpeg"
+    },
+
+    {
+      name: "Tewodros Adane",
       role: "Vice President Membership",
-      image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+      image: "./members/membership.jpeg"
     },
+    
     {
-      name: "Raj Patel",
+      name: "Atnatewos Hailealem",
       role: "Secretary",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+      image: "./members/secretary.jpeg"
     },
     {
-      name: "Lisa Tan",
+      name: "Yonatan Getachew",
       role: "Treasurer",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+      image: "./members/Treasurer.jpg"
     },
     {
-      name: "Jason Kim",
+      name: "Kalid Ahmed",
       role: "Sergeant at Arms",
-      image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+      image: "./members/sergent.jpeg"
     }
   ];
 
@@ -203,7 +210,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="relative h-48 md:h-64 rounded-lg overflow-hidden">
               <Image 
-                src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                src="./club/club1.jpeg" 
                 alt="Club Meeting"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"
@@ -211,7 +218,7 @@ export default function AboutPage() {
             </div>
             <div className="relative h-48 md:h-64 rounded-lg overflow-hidden">
               <Image 
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                src="./club/club2.jpg" 
                 alt="Team Discussion"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"
@@ -219,7 +226,7 @@ export default function AboutPage() {
             </div>
             <div className="relative h-48 md:h-64 rounded-lg overflow-hidden">
               <Image 
-                src="https://images.unsplash.com/photo-1558403194-611308249627?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                src="./club/club3.jpeg" 
                 alt="Speech Contest"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"
@@ -227,7 +234,7 @@ export default function AboutPage() {
             </div>
             <div className="relative h-48 md:h-64 rounded-lg overflow-hidden">
               <Image 
-                src="https://images.unsplash.com/photo-1560439514-4e9645039924?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                src="./club/club4.jpeg" 
                 alt="Workshop"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"

@@ -25,9 +25,14 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 px-4 py-2 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
+          <img
+            src="./gavelogo.jpeg"
+            alt="SMU Gavel Club Logo"
+            className="h-12 w-12 rounded-full"
+          />
           <span className="text-2xl font-bold text-[#8B0000]">SMU Gavel Club</span>
         </Link>
 
