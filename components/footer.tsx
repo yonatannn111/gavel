@@ -1,76 +1,242 @@
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from "lucide-react";
+import { motion } from "framer-motion";
+import { Facebook, Instagram, Twitter, Mail, MapPin, Phone, Clock, Youtube, Linkedin } from "lucide-react";
+
+const footerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  })
+};
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-[#8B0000] text-white">
-      <div className="container py-12 px-4 md:py-16 md:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div>
-            <h3 className="text-xl font-bold mb-4">SMU Gavel Club</h3>
-            <p className="text-gray-200 mb-4">
-              Developing leadership through public speaking and communication skills.
-            </p>
-            <div className="flex space-x-4">
-              <Link href="https://facebook.com" className="hover:text-gray-300">
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="https://instagram.com" className="hover:text-gray-300">
-                <Instagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="https://twitter.com" className="hover:text-gray-300">
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </Link>
+    <footer className="bg-gradient-to-b from-[#8B0000] to-[#600000] text-white pt-16 pb-8 md:pt-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+          {/* About Section */}
+          <motion.div 
+            className="space-y-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px 0px" }}
+            variants={footerVariants}
+          >
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                <span className="text-[#8B0000] font-bold text-xl">G</span>
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                SMU Gavel Club
+              </span>
             </div>
-          </div>
-          <div>
-            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="hover:text-gray-300">Home</Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-gray-300">About Us</Link>
-              </li>
-              <li>
-                <Link href="/events" className="hover:text-gray-300">Events</Link>
-              </li>
-              <li>
-                <Link href="/gallery" className="hover:text-gray-300">Gallery</Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-gray-300">Contact</Link>
-              </li>
-              <li>
-                <Link href="/join" className="hover:text-gray-300">Join Us</Link>
-              </li>
+            <p className="text-gray-200 leading-relaxed">
+              Empowering voices and building confidence through the art of public speaking at St. Mary&apos;s University, Ethiopia.
+            </p>
+            <div className="flex space-x-4 pt-2">
+              {[
+                { icon: Facebook, href: "https://facebook.com/smugavelclub", label: "Facebook" },
+                { icon: Instagram, href: "https://instagram.com/smugavelclub", label: "Instagram" },
+                { icon: Twitter, href: "https://twitter.com/smugavelclub", label: "Twitter" },
+                { icon: Linkedin, href: "https://linkedin.com/company/smugavelclub", label: "LinkedIn" },
+                { icon: Youtube, href: "https://youtube.com/@smugavelclub", label: "YouTube" }
+              ].map(({ icon: Icon, href, label }, index) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                  aria-label={label}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  custom={index}
+                  variants={footerVariants}
+                >
+                  <Icon className="h-5 w-5 text-white" />
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Quick Links */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px 0px" }}
+            variants={footerVariants}
+            custom={0.2}
+          >
+            <h3 className="text-lg font-bold mb-6 relative pb-2 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-12 after:h-0.5 after:bg-amber-400">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              {[
+                { name: 'Home', href: '/' },
+                { name: 'About Us', href: '/about' },
+                { name: 'Events', href: '/events' },
+                { name: 'Gallery', href: '/gallery' },
+                { name: 'Join Us', href: '/join' },
+                { name: 'Contact', href: '/contact' }
+              ].map((item, index) => (
+                <motion.li 
+                  key={item.name}
+                  custom={0.3 + (index * 0.1)}
+                  variants={footerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-50px 0px" }}
+                >
+                  <Link 
+                    href={item.href} 
+                    className="flex items-center text-gray-200 hover:text-white transition-colors group py-1.5"
+                  >
+                    <span className="w-1.5 h-1.5 bg-amber-400 rounded-full mr-3 transform transition-transform group-hover:translate-x-1"></span>
+                    <span>{item.name}</span>
+                  </Link>
+                </motion.li>
+              ))}
             </ul>
-          </div>
-          <div>
-            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <MapPin className="h-5 w-5 mr-2" />
-                <span>SMU Campus, 81 Victoria St, Singapore 188065</span>
-              </li>
-              <li className="flex items-center">
-                <Mail className="h-5 w-5 mr-2" />
-                <a href="mailto:gavelclub@smu.edu.sg" className="hover:text-gray-300">
-                  gavelclub@smu.edu.sg
-                </a>
-              </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 mr-2" />
-                <span>+65 6828 0100</span>
-              </li>
+          </motion.div>
+
+          {/* Contact Information */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px 0px" }}
+            variants={footerVariants}
+            custom={0.4}
+          >
+            <h3 className="text-lg font-bold mb-6 relative pb-2 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-12 after:h-0.5 after:bg-amber-400">
+              Contact Us
+            </h3>
+            <ul className="space-y-4">
+              {[
+                { 
+                  icon: Mail, 
+                  content: 'gavelclub@smu.edu.et',
+                  href: 'mailto:gavelclub@smu.edu.et'
+                },
+                { 
+                  icon: Phone, 
+                  content: '+251 911 123 456',
+                  href: 'tel:+251911123456'
+                },
+                { 
+                  icon: Clock, 
+                  content: 'Mon - Fri: 8:30 AM - 5:30 PM',
+                  href: ''
+                },
+                { 
+                  icon: MapPin, 
+                  content: 'Mexico Campus, Addis Ababa, Ethiopia',
+                  href: 'https://maps.google.com?q=St+Mary%27s+University+Addis+Ababa'
+                }
+              ].map((item, index) => (
+                <motion.li 
+                  key={index}
+                  className="flex items-start"
+                  custom={0.5 + (index * 0.1)}
+                  variants={footerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-50px 0px" }}
+                >
+                  <item.icon className="h-5 w-5 text-amber-400 mt-0.5 mr-3 flex-shrink-0" />
+                  {item.href ? (
+                    <a 
+                      href={item.href} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-gray-200 hover:text-white transition-colors"
+                    >
+                      {item.content}
+                    </a>
+                  ) : (
+                    <span className="text-gray-200">{item.content}</span>
+                  )}
+                </motion.li>
+              ))}
             </ul>
-          </div>
+          </motion.div>
+
+          {/* Newsletter Signup */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px 0px" }}
+            variants={footerVariants}
+            custom={0.6}
+          >
+            <h3 className="text-lg font-bold mb-6 relative pb-2 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-12 after:h-0.5 after:bg-amber-400">
+              Newsletter
+            </h3>
+            <p className="text-gray-200 mb-4">
+              Subscribe to our newsletter for the latest updates and events.
+            </p>
+            <form className="space-y-3">
+              <div>
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium py-2.5 px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-[#8B0000]"
+              >
+                Subscribe
+              </button>
+            </form>
+          </motion.div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-700 text-center text-sm text-gray-300">
-          <p>© {new Date().getFullYear()} SMU Gavel Club. All rights reserved.</p>
+
+        {/* Divider */}
+        <div className="border-t border-white/10 my-12"></div>
+
+        {/* Copyright and Bottom Links */}
+        <div className="flex flex-col md:flex-row justify-between items-center pt-6">
+          <motion.p 
+            className="text-sm text-gray-300 mb-4 md:mb-0"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            &copy; {currentYear} SMU Gavel Club. All rights reserved.
+          </motion.p>
+          <div className="flex space-x-6">
+            {[
+              { name: 'Privacy Policy', href: '/privacy' },
+              { name: 'Terms of Service', href: '/terms' },
+              { name: 'Cookie Policy', href: '/cookies' }
+            ].map((item, index) => (
+              <motion.div
+                key={item.name}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 + (index * 0.1) }}
+              >
+                <Link 
+                  href={item.href} 
+                  className="text-sm text-gray-300 hover:text-white transition-colors"
+                >
+                  {item.name}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

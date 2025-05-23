@@ -1,250 +1,562 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { Calendar, Download, Share2, X, Image as ImageIcon, MapPin, Tag as TagIcon, ChevronLeft, ChevronRight, ChevronDown, Users, Mail, Upload } from 'lucide-react';
+import { galleryImages, type GalleryImage, type GalleryCategory } from './galleryData';
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
-// Sample gallery data
-const galleryImages = [
-  {
-    id: 1,
-    src: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Weekly Club Meeting",
-    category: "meetings",
-    date: "April 2025"
-  },
-  {
-    id: 2,
-    src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Team Discussion",
-    category: "meetings",
-    date: "March 2025"
-  },
-  {
-    id: 3,
-    src: "https://images.unsplash.com/photo-1558403194-611308249627?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Speech Contest",
-    category: "contests",
-    date: "February 2025"
-  },
-  {
-    id: 4,
-    src: "https://images.unsplash.com/photo-1560439514-4e9645039924?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Workshop",
-    category: "workshops",
-    date: "January 2025"
-  },
-  {
-    id: 5,
-    src: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Networking Event",
-    category: "social",
-    date: "December 2024"
-  },
-  {
-    id: 6,
-    src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Inter-University Competition",
-    category: "contests",
-    date: "November 2024"
-  },
-  {
-    id: 7,
-    src: "https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Executive Committee Handover",
-    category: "social",
-    date: "October 2024"
-  },
-  {
-    id: 8,
-    src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Leadership Workshop",
-    category: "workshops",
-    date: "September 2024"
-  },
-  {
-    id: 9,
-    src: "https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Impromptu Speaking Session",
-    category: "meetings",
-    date: "August 2024"
-  },
-  {
-    id: 10,
-    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Member Presentation",
-    category: "meetings",
-    date: "July 2024"
-  },
-  {
-    id: 11,
-    src: "https://images.unsplash.com/photo-1591115765373-5207764f72e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Annual Dinner",
-    category: "social",
-    date: "June 2024"
-  },
-  {
-    id: 12,
-    src: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-    alt: "Public Speaking Workshop",
-    category: "workshops",
-    date: "May 2024"
-  }
+// Fallback images for error handling
+const FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1505373877841-8d25f03d0b1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+  "https://images.unsplash.com/photo-1469371670807-b4949865b5ac?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
 ];
+
+// Categories for filtering
+const categories = [
+  { id: 'all' as const, name: 'All' },
+  { id: 'meetings' as const, name: 'Meetings' },
+  { id: 'workshops' as const, name: 'Workshops' },
+  { id: 'contests' as const, name: 'Contests' },
+  { id: 'social' as const, name: 'Social' },
+  { id: 'other' as const, name: 'Other' },
+];
+
+// Helper function to get fallback image
+const getFallbackImage = (id: number) => FALLBACK_IMAGES[id % FALLBACK_IMAGES.length];
+
+// Skeleton loader component
+const ImageSkeleton = () => (
+  <div className="aspect-[3/2] bg-gray-100 rounded-xl animate-pulse"></div>
+);
+
+// Image card component
+const GalleryImageCard = ({
+  image,
+  onClick,
+  className = "",
+}: {
+  image: GalleryImage;
+  onClick: () => void;
+  className?: string;
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [imgSrc, setImgSrc] = useState(image.src);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleError = () => {
+    const randomFallback = FALLBACK_IMAGES[Math.floor(Math.random() * FALLBACK_IMAGES.length)];
+    setImgSrc(randomFallback);
+  };
+
+  return (
+    <div
+      className={cn("group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 bg-white cursor-pointer flex flex-col h-full border border-gray-100 hover:border-gray-200", className)}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="aspect-[3/2] relative bg-gray-100">
+        <Image
+          src={imgSrc}
+          alt={image.alt}
+          fill
+          className={cn(
+            "object-cover transition-opacity duration-300",
+            isLoading ? "opacity-0" : "opacity-100"
+          )}
+          onLoad={() => setIsLoading(false)}
+          onError={handleError}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={image.featured}
+        />
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <div className="w-8 h-8 border-4 border-gray-300 border-t-[#8B0000] rounded-full animate-spin"></div>
+          </div>
+        )}
+        
+        {image.featured && (
+          <div className="absolute top-3 left-3 bg-[#8B0000] text-white text-xs font-medium px-2 py-1 rounded-full">
+            Featured
+          </div>
+        )}
+      </div>
+      
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-900 line-clamp-1">{image.title}</h3>
+        <p className="text-sm text-gray-500 mt-1 line-clamp-2">{image.description}</p>
+        
+        <div className="flex items-center mt-2 text-xs text-gray-500">
+          <Calendar className="w-3.5 h-3.5 mr-1" />
+          <span>{image.date}</span>
+          {image.location && (
+            <>
+              <MapPin className="w-3.5 h-3.5 ml-3 mr-1" />
+              <span className="truncate">{image.location.split(',')[0]}</span>
+            </>
+          )}
+        </div>
+        
+        {image.tags && image.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {image.tags.slice(0, 2).map((tag, idx) => (
+              <span 
+                key={idx}
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+              >
+                <TagIcon className="w-3 h-3 mr-1" />
+                {tag}
+              </span>
+            ))}
+            {image.tags.length > 2 && (
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
+                +{image.tags.length - 2}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+      
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div 
+            className="absolute inset-0 bg-black/60 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="text-white text-center p-4">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center mb-2 mx-auto">
+                <ImageIcon className="w-6 h-6" />
+              </div>
+              <span className="font-medium">View Details</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [filter, setFilter] = useState<string>("all");
+  const [filter, setFilter] = useState<GalleryCategory | 'all'>('all');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
+  const [visibleCount, setVisibleCount] = useState(12);
+  const [isShareSupported, setIsShareSupported] = useState(false);
+  const { toast } = useToast();
+  const controls = useAnimation();
   
-  const filteredImages = filter === "all" 
-    ? galleryImages 
-    : galleryImages.filter(image => image.category === filter);
+  // Check if Web Share API is supported
+  useEffect(() => {
+    setIsClient(true);
+    setIsShareSupported(!!navigator.share);
+  }, []);
+  
+  // Filter and sort images
+  const filteredImages = useMemo(() => {
+    return (filter === 'all' 
+      ? [...galleryImages] 
+      : galleryImages.filter(image => image.category === filter)
+    ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [filter]);
+  
+  // Get featured images for the hero section
+  const featuredImages = useMemo(() => 
+    galleryImages.filter(img => img.featured)
+  , []);
+  
+  // Handle image loading errors
+  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>, id: number) => {
+    const target = e.target as HTMLImageElement;
+    target.src = getFallbackImage(id);
+  }, []);
+  
+  // Navigate between images in lightbox
+  const navigateImage = useCallback((direction: 'prev' | 'next') => {
+    if (selectedImage === null) return;
+    
+    const currentIndex = filteredImages.findIndex(img => img.id === selectedImage);
+    if (currentIndex === -1) return;
+    
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % filteredImages.length;
+    } else {
+      newIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+    }
+    
+    setSelectedImage(filteredImages[newIndex].id);
+    
+    // Animate the lightbox content
+    controls.start({
+      x: direction === 'next' ? 50 : -50,
+      opacity: 0,
+      transition: { duration: 0.1 }
+    }).then(() => {
+      controls.start({
+        x: 0,
+        opacity: 1,
+        transition: { duration: 0.2 }
+      });
+    });
+  }, [selectedImage, filteredImages, controls]);
+  
+  // Handle keyboard navigation in lightbox
+  useEffect(() => {
+    if (selectedImage === null) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedImage(null);
+      } else if (e.key === 'ArrowRight') {
+        navigateImage('next');
+      } else if (e.key === 'ArrowLeft') {
+        navigateImage('prev');
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage, navigateImage]);
+  
+  // Load more images
+  const loadMore = () => {
+    setVisibleCount(prev => Math.min(prev + 12, filteredImages.length));
+  };
+  
+  // Handle share functionality
+  const handleShare = useCallback(async () => {
+    if (selectedImage === null) return;
+    
+    const image = filteredImages.find(img => img.id === selectedImage);
+    if (!image) return;
+    
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: image.title,
+          text: image.description,
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: "Link copied to clipboard",
+          description: "Share this link with others!",
+        });
+      }
+    } catch (err) {
+      console.error('Error sharing:', err);
+    }
+  }, [selectedImage, filteredImages, toast]);
+  
+  // Open lightbox with smooth transition
+  const openLightbox = useCallback((id: number) => {
+    setSelectedImage(id);
+  }, []);
+  
+  // Close lightbox with animation
+  const closeLightbox = useCallback(() => {
+    controls.start({
+      opacity: 0,
+      scale: 0.9,
+      transition: { duration: 0.2 }
+    }).then(() => {
+      setSelectedImage(null);
+    });
+  }, [controls]);
+  
+  // Get current image for lightbox
+  const currentImage = useMemo(() => {
+    return filteredImages.find(img => img.id === selectedImage);
+  }, [filteredImages, selectedImage]);
+  
+  // Reset visible count when filter changes
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [filter]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-[#8B0000] text-white py-16">
-        <div className="container mx-auto px-4 z-10 relative">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Gallery</h1>
-          <p className="text-xl max-w-3xl">
-            Browse through photos from our past events, meetings, and activities.
-          </p>
+      <section className="bg-gradient-to-r from-[#8B0000] to-[#660000] text-white py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Gallery</h1>
+            <p className="text-lg md:text-xl opacity-90 mb-8">
+              Relive the best moments from our events, workshops, and competitions.
+            </p>
+            
+            {/* Featured Images Carousel */}
+            {featuredImages.length > 0 && (
+              <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                {featuredImages.slice(0, 4).map((image) => (
+                  <motion.div
+                    key={image.id}
+                    className="aspect-[3/2] relative group overflow-hidden rounded-lg"
+                    whileHover={{ scale: 1.03 }}
+                    onClick={() => openLightbox(image.id)}
+                  >
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300 flex items-center justify-center">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:scale-110 transition-transform duration-300">
+                        <ImageIcon className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </motion.div>
         </div>
-        <div className="absolute inset-0 bg-black/30 z-0"></div>
       </section>
 
       {/* Gallery Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <button
-              onClick={() => setFilter("all")}
-              className={`px-4 py-2 rounded-full ${
-                filter === "all" 
-                  ? "bg-[#8B0000] text-white" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              All Photos
-            </button>
-            <button
-              onClick={() => setFilter("meetings")}
-              className={`px-4 py-2 rounded-full ${
-                filter === "meetings" 
-                  ? "bg-[#8B0000] text-white" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Meetings
-            </button>
-            <button
-              onClick={() => setFilter("workshops")}
-              className={`px-4 py-2 rounded-full ${
-                filter === "workshops" 
-                  ? "bg-[#8B0000] text-white" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Workshops
-            </button>
-            <button
-              onClick={() => setFilter("contests")}
-              className={`px-4 py-2 rounded-full ${
-                filter === "contests" 
-                  ? "bg-[#8B0000] text-white" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Contests
-            </button>
-            <button
-              onClick={() => setFilter("social")}
-              className={`px-4 py-2 rounded-full ${
-                filter === "social" 
-                  ? "bg-[#8B0000] text-white" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Social Events
-            </button>
-          </div>
+          <motion.div 
+            className="flex flex-wrap justify-center gap-2 mb-8 md:mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            {categories.map((category) => (
+              <motion.button
+                key={category.id}
+                onClick={() => setFilter(category.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  filter === category.id
+                    ? "bg-[#8B0000] text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {category.name}
+              </motion.button>
+            ))}
+          </motion.div>
           
           {/* Gallery Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredImages.map((image) => (
-              <div 
-                key={image.id} 
-                className="relative group cursor-pointer overflow-hidden rounded-lg"
-                onClick={() => setSelectedImage(image.id)}
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, staggerChildren: 0.05, delayChildren: 0.2 }}
+          >
+            {filteredImages.slice(0, visibleCount).map((image, index) => (
+              <motion.div
+                key={image.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.05 * (index % 12) }}
+                className="h-full"
               >
-                <div className="aspect-square relative">
-                  <Image 
-                    src={image.src} 
-                    alt={image.alt}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-end">
-                  <div className="p-4 w-full text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="font-semibold">{image.alt}</p>
-                    <p className="text-sm">{image.date}</p>
-                  </div>
-                </div>
-              </div>
+                <GalleryImageCard
+                  image={image}
+                  onClick={() => openLightbox(image.id)}
+                />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
           
-          {/* Lightbox Dialog */}
-          <Dialog open={selectedImage !== null} onOpenChange={() => setSelectedImage(null)}>
-            <DialogContent className="max-w-4xl p-0 bg-transparent border-none shadow-none">
-              {selectedImage !== null && (
-                <div className="relative">
-                  <div className="relative aspect-video">
-                    <Image 
-                      src={galleryImages.find(img => img.id === selectedImage)?.src || ""} 
-                      alt={galleryImages.find(img => img.id === selectedImage)?.alt || ""}
-                      fill
-                      className="object-contain"
-                    />
+          {/* Load More Button */}
+          {visibleCount < filteredImages.length && (
+            <motion.div 
+              className="mt-10 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              <Button
+                onClick={loadMore}
+                variant="outline"
+                className="border-[#8B0000] text-[#8B0000] hover:bg-[#8B0000] hover:text-white transition-colors"
+              >
+                Load More
+              </Button>
+            </motion.div>
+          )}
+        </div>
+      </section>
+      
+      {/* Submit Photos CTA */}
+      <section className="py-12 md:py-16 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            className="max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="w-16 h-16 bg-[#8B0000] rounded-full flex items-center justify-center mx-auto mb-6">
+              <Upload className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Share Your Moments</h2>
+            <p className="text-gray-600 mb-8">
+              Have photos from our events? Share them with us to be featured in our gallery!
+            </p>
+            <Button className="bg-[#8B0000] hover:bg-[#6B0000] transition-colors">
+              Submit Photos
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+      
+      {/* Lightbox */}
+      <AnimatePresence>
+        {selectedImage !== null && currentImage && (
+          <Dialog open={selectedImage !== null} onOpenChange={(open) => !open && closeLightbox()}>
+            <DialogContent className="max-w-4xl p-0 bg-transparent border-0">
+              <div className="relative">
+                {/* Close Button */}
+                <button
+                  onClick={closeLightbox}
+                  className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors z-10"
+                  aria-label="Close"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+                
+                {/* Navigation Arrows */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateImage('prev');
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-10 transition-colors"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateImage('next');
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-10 transition-colors"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+                
+                {/* Image */}
+                <motion.div
+                  className="relative aspect-video bg-black rounded-lg overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Image
+                    src={currentImage.src}
+                    alt={currentImage.alt}
+                    fill
+                    className="object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = getFallbackImage(currentImage.id);
+                    }}
+                    priority
+                  />
+                </motion.div>
+                
+                {/* Caption */}
+                <motion.div 
+                  className="mt-4 bg-white rounded-lg p-4 shadow-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{currentImage.title}</h3>
+                      <p className="text-gray-600 mt-1">{currentImage.description}</p>
+                      <div className="flex items-center text-sm text-gray-500 mt-2">
+                        <Calendar className="w-4 h-4 mr-1" />
+                        <span>{currentImage.date}</span>
+                        {currentImage.location && (
+                          <>
+                            <MapPin className="w-4 h-4 ml-3 mr-1" />
+                            <span>{currentImage.location}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {isShareSupported && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleShare}
+                          className="flex items-center gap-1"
+                        >
+                          <Share2 className="w-4 h-4" />
+                          <span>Share</span>
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                      >
+                        <a 
+                          href={currentImage.src} 
+                          download
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1"
+                        >
+                          <Download className="w-4 h-4" />
+                          <span>Download</span>
+                        </a>
+                      </Button>
+                    </div>
                   </div>
-                  <button 
-                    onClick={() => setSelectedImage(null)}
-                    className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
-                  >
-                    <X className="h-6 w-6" />
-                  </button>
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white p-4">
-                    <p className="font-semibold">
-                      {galleryImages.find(img => img.id === selectedImage)?.alt}
-                    </p>
-                    <p className="text-sm">
-                      {galleryImages.find(img => img.id === selectedImage)?.date}
-                    </p>
-                  </div>
-                </div>
-              )}
+                  
+                  {currentImage.tags && currentImage.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
+                      {currentImage.tags.map((tag, idx) => (
+                        <span 
+                          key={idx}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                        >
+                          <TagIcon className="w-3 h-3 mr-1" />
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              </div>
             </DialogContent>
           </Dialog>
-        </div>
-      </section>
-
-      {/* Submit Photos CTA */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6 text-[#8B0000]">Have Photos to Share?</h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
-            If you have photos from our events that you'd like to share, please send them to us. We'd love to add them to our gallery!
-          </p>
-          <div className="inline-flex items-center justify-center bg-[#8B0000] text-white px-6 py-3 rounded-md hover:bg-[#FF0000] transition-colors">
-            <a href="mailto:gavelclub@smu.edu.sg?subject=Photo%20Submission" className="flex items-center">
-              Submit Your Photos
-            </a>
-          </div>
-        </div>
-      </section>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
