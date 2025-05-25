@@ -92,7 +92,7 @@ const executiveCommittee: CommitteeMember[] = [
   {
     name: "Atnatewos Hailealem",
     role: "Secretary",
-    image: "/members/secretary.jpeg"
+    image: "/members/secretary.jpg"
   },
   {
     name: "Yonatan Getachew",

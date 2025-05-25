@@ -9,13 +9,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, MapPin, ArrowRight, CalendarPlus, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Event, eventTypes, upcomingEvents, pastEvents } from "@/types/events";
 
 // Dynamic import for client-side only components
 const ClientOnlyTabs = dynamic(
   () => import('@/components/ui/tabs').then(mod => ({
     default: ({ children, ...props }: any) => (
       <Tabs {...props}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={
+          <div className="h-64 flex items-center justify-center">
+            <div className="animate-pulse text-[#8B0000]">Loading events...</div>
+          </div>
+        }>
           {children}
         </Suspense>
       </Tabs>
@@ -24,215 +29,193 @@ const ClientOnlyTabs = dynamic(
   { ssr: false }
 );
 
-// Fallback images for events
-const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=1112&q=80',
-  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80',
-  'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-  'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=1112&q=80'
-];
+// Event types and interfaces are now imported from '@/types/events'
 
-const getFallbackImage = (id: number) => FALLBACK_IMAGES[id % FALLBACK_IMAGES.length];
-
-// Sample event data
-const upcomingEvents = [
-  {
-    id: 1,
-    title: "Weekly Club Meeting",
-    date: "May 15, 2025",
-    time: "6:00 PM - 8:00 PM",
-    location: "SMU School of Business, Seminar Room 3.1",
-    description: "Join us for our regular meeting featuring prepared speeches, evaluations, and impromptu speaking sessions. This week's theme is 'Innovation and Creativity'.",
-    image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  },
-  {
-    id: 2,
-    title: "Public Speaking Workshop",
-    date: "May 22, 2025",
-    time: "5:30 PM - 7:30 PM",
-    location: "SMU School of Accountancy, Function Room 2",
-    description: "A special workshop focused on mastering the art of persuasive speaking and effective body language. Open to all SMU students, regardless of membership status.",
-    image: "https://images.unsplash.com/photo-1560439514-4e9645039924?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  },
-  {
-    id: 3,
-    title: "Annual Speech Contest",
-    date: "June 5, 2025",
-    time: "7:00 PM - 9:30 PM",
-    location: "SMU Auditorium",
-    description: "Our flagship event where members compete in various speech categories to showcase their skills. Categories include Prepared Speech, Impromptu Speech, and Humorous Speech.",
-    image: "https://images.unsplash.com/photo-1558403194-611308249627?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  },
-  {
-    id: 4,
-    title: "Leadership Development Workshop",
-    date: "June 12, 2025",
-    time: "6:30 PM - 8:30 PM",
-    location: "SMU School of Information Systems, Seminar Room 2.2",
-    description: "A workshop designed to help members develop essential leadership skills, including delegation, team management, and effective communication in leadership roles.",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  }
-];
-
-const pastEvents = [
-  {
-    id: 5,
-    title: "Inter-University Speech Competition",
-    date: "April 18, 2025",
-    time: "1:00 PM - 5:00 PM",
-    location: "NUS University Town",
-    description: "A collaborative event with other university Toastmasters clubs, featuring speech competitions and networking opportunities.",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  },
-  {
-    id: 6,
-    title: "Impromptu Speaking Workshop",
-    date: "April 5, 2025",
-    time: "3:00 PM - 5:00 PM",
-    location: "SMU School of Economics, Seminar Room 1.1",
-    description: "A specialized workshop focusing on techniques for effective impromptu speaking and thinking on your feet.",
-    image: "https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  },
-  {
-    id: 7,
-    title: "Executive Committee Handover Ceremony",
-    date: "March 22, 2025",
-    time: "7:00 PM - 9:00 PM",
-    location: "SMU Campus Green",
-    description: "A formal ceremony to recognize outgoing executive committee members and welcome the newly elected leadership team.",
-    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  },
-  {
-    id: 8,
-    title: "Alumni Networking Night",
-    date: "March 10, 2025",
-    time: "6:30 PM - 9:00 PM",
-    location: "SMU School of Law, Function Hall",
-    description: "An evening of networking with Gavel Club alumni, featuring speeches from successful past members and career insights.",
-    image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-  }
-];
-
-// Event card component
+// Event card component - Modern design inspired by Eventbrite/Meetup
 const EventCard = ({ 
   event, 
   isSelected, 
   onClick,
   isPast = false 
 }: { 
-  event: typeof upcomingEvents[0]; 
+  event: Event;
   isSelected: boolean; 
   onClick: () => void;
   isPast?: boolean;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4 }}
-    className={cn(
-      "group relative bg-white rounded-2xl shadow-lg overflow-hidden border-2 transition-all duration-300 hover:shadow-xl",
-      isSelected ? 'border-[#8B0000]' : 'border-transparent hover:border-[#8B0000]/20',
-      isPast && 'opacity-80 hover:opacity-100'
-    )}
-  >
-    <div className="md:flex h-full">
-      <div className="md:w-2/5 h-64 md:h-auto relative overflow-hidden">
-        <Image 
-          src={event.image || getFallbackImage(event.id)} 
-          alt={event.title}
-          fill
-          className={cn(
-            "object-cover transition-transform duration-500 group-hover:scale-105",
-            isPast && 'grayscale'
-          )}
-          onError={(e) => {
-            // Fallback to a default image if the original fails to load
-            const target = e.target as HTMLImageElement;
-            target.src = getFallbackImage(event.id);
-          }}
-        />
-        {isPast && (
-          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-            <span className="bg-[#8B0000] text-white px-3 py-1 rounded-full text-sm font-medium">
-              Past Event
-            </span>
-          </div>
-        )}
-      </div>
-      
-      <div className="md:w-3/5 p-6 flex flex-col h-full">
-        <div className="flex-grow">
-          <div className="flex justify-between items-start mb-3">
-            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#8B0000] transition-colors">
-              {event.title}
-            </h3>
-            <button 
-              onClick={onClick}
-              className="md:hidden p-1 -mr-2 text-gray-400 hover:text-[#8B0000] transition-colors"
-              aria-label={isSelected ? 'Collapse event details' : 'Expand event details'}
-            >
-              {isSelected ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </button>
-          </div>
-          
-          <div className="space-y-3 mb-4">
-            <div className="flex items-start">
-              <Calendar className="h-5 w-5 text-[#8B0000] mt-0.5 mr-3 flex-shrink-0" />
-              <div>
-                <p className="font-medium text-gray-900">{event.date}</p>
-                <p className="text-sm text-gray-500">{event.time}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start">
-              <MapPin className="h-5 w-5 text-[#8B0000] mt-0.5 mr-3 flex-shrink-0" />
-              <p className="text-gray-600">{event.location}</p>
+}) => {
+  const EventTypeIcon = eventTypes[event.type]?.icon || Calendar;
+  const eventTypeConfig = eventTypes[event.type] || { color: 'bg-gray-100 text-gray-800' };
+  
+  // Format date to show day, month, and date (e.g., "Fri, May 25")
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { 
+      weekday: 'short',
+      month: 'short', 
+      day: 'numeric'
+    };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
+  // Format time in 12-hour format (e.g., "2:00 PM")
+  const formatTime = (timeString: string) => {
+    const [time, period] = timeString.split(' ');
+    return time.split(':').slice(0, 2).join(':');
+  };
+
+  // Get month and day for the date badge
+  const getDateBadge = (dateString: string) => {
+    const date = new Date(dateString);
+    return {
+      month: date.toLocaleString('default', { month: 'short' }),
+      day: date.getDate()
+    };
+  };
+
+  const { month, day } = getDateBadge(event.date);
+  const [startTime, endTime] = event.time.split(' - ').map(t => t.trim());
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className={cn(
+        "group relative bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-all duration-200",
+        isSelected && 'ring-2 ring-[#8B0000] border-transparent',
+        isPast && 'opacity-70 hover:opacity-90'
+      )}
+    >
+      <div className="flex flex-col md:flex-row h-full">
+        {/* Date Badge - Left side on desktop, top on mobile */}
+        <div className="md:w-24 md:border-r border-gray-100 bg-gray-50 flex-shrink-0">
+          <div className="p-4 text-center">
+            <div className="text-sm font-medium text-gray-500 uppercase tracking-wider">{month}</div>
+            <div className="text-2xl font-bold text-gray-900 mt-1">{day}</div>
+            <div className="mt-1 text-xs text-gray-500">
+              {formatTime(startTime)} - {formatTime(endTime)}
             </div>
           </div>
-          
-          <AnimatePresence>
-            {(isSelected || (typeof window !== 'undefined' && window.innerWidth >= 768)) && (
-              <motion.div
-                initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                animate={{ opacity: 1, height: 'auto', marginTop: '1rem' }}
-                exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
-              >
-                <p className="text-gray-600 mb-6">{event.description}</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
         
-        <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-100">
-          <Button 
-            className="bg-gradient-to-r from-[#8B0000] to-[#B91C1C] hover:from-[#B91C1C] hover:to-[#8B0000] px-6 py-2 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-0.5"
-            disabled={isPast}
-          >
-            {isPast ? 'Event Ended' : 'Register Now'}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="border-[#8B0000] text-[#8B0000] hover:bg-[#8B0000] hover:text-white px-6 py-2 rounded-lg font-medium transition-all duration-300"
-          >
-            <CalendarPlus className="mr-2 h-4 w-4" />
-            Add to Calendar
-          </Button>
-          
-          {isPast && (
-            <Button variant="ghost" className="ml-auto text-[#8B0000] hover:bg-[#FFE5E5] flex items-center">
-              View Photos
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-          )}
+        {/* Event Content */}
+        <div className="flex-1 flex flex-col">
+          <div className="p-5">
+            {/* Event Type and Online/Offline Badge */}
+            <div className="flex justify-between items-start mb-2">
+              <div className="flex items-center">
+                <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${eventTypeConfig.color}`}>
+                  <EventTypeIcon className="h-3 w-3 mr-1.5" />
+                  {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                </div>
+                <span className="ml-2 text-xs text-gray-500">• {event.location.includes('Online') ? 'Online' : 'In Person'}</span>
+              </div>
+              {isPast && (
+                <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                  Past Event
+                </span>
+              )}
+            </div>
+
+            {/* Event Title */}
+            <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-[#8B0000] transition-colors">
+              <Link href={`/events/${event.id}`} className="hover:underline">
+                {event.title}
+              </Link>
+            </h3>
+
+            {/* Location and Time - Stacked on mobile, inline on desktop */}
+            <div className="mt-3 space-y-2 text-sm">
+              <div className="flex items-start">
+                <MapPin className="h-4 w-4 text-gray-400 mt-0.5 mr-2 flex-shrink-0" />
+                <span className="text-gray-700">{event.location}</span>
+              </div>
+              <div className="flex items-center text-gray-500">
+                <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                <span>{formatDate(event.date)} • {event.time}</span>
+              </div>
+            </div>
+
+            {/* Description (collapsible) */}
+            <AnimatePresence>
+              {(isSelected || (typeof window !== 'undefined' && window.innerWidth >= 768)) && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                  animate={{ opacity: 1, height: 'auto', marginTop: '1rem' }}
+                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{event.description}</p>
+                  
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#8B0000]/10 text-[#8B0000]">
+                      Public Speaking
+                    </span>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {event.type === 'workshop' ? 'Interactive' : 'Networking'}
+                    </span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="mt-auto p-4 bg-gray-50 border-t border-gray-100">
+            <div className="flex items-center justify-between">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-gray-700 hover:bg-gray-100 hover:border-gray-300"
+                asChild
+              >
+                <Link href={`/events/${event.id}`} className="flex items-center">
+                  <span>View Details</span>
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Link>
+              </Button>
+              
+              <div className="flex items-center space-x-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="h-8 w-8 text-gray-500 hover:bg-gray-200"
+                  title="Add to calendar"
+                >
+                  <CalendarPlus className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="h-8 w-8 text-gray-500 hover:bg-gray-200"
+                  title="Share event"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </motion.div>
-);
+      
+      {/* Toggle button for mobile */}
+      <button 
+        onClick={onClick}
+        className="md:hidden absolute bottom-4 right-4 p-1.5 rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
+        aria-label={isSelected ? 'Collapse event details' : 'Expand event details'}
+      >
+        {isSelected ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+      </button>
+    </motion.article>
+  );
+};
 
 export default function EventsPage() {
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
