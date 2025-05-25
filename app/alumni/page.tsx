@@ -31,7 +31,7 @@ export default function AlumniPage() {
       graduationYear: 2022,
       currentRole: 'Product Manager',
       testimonial: 'My time at SMU Gavel Club was transformative. The public speaking and leadership skills I developed have been instrumental in my career. I still use the evaluation techniques I learned in every team meeting!',
-      image: '/alumni/sarah-johnson.jpg',
+      image: 'https://randomuser.me/api/portraits/women/1.jpg',
       linkedin: 'https://linkedin.com/in/sarahjohnson',
       email: 'sarah.johnson@example.com',
       achievements: [
@@ -49,7 +49,7 @@ export default function AlumniPage() {
       graduationYear: 2021,
       currentRole: 'UX Designer',
       testimonial: 'The structured learning path in Gavel Club gave me the confidence to present my design work effectively. The feedback culture helped me improve my communication skills dramatically.',
-      image: '/alumni/david-kim.jpg',
+      image: 'https://randomuser.me/api/portraits/men/32.jpg',
       linkedin: 'https://linkedin.com/in/davidkim',
       email: 'david.kim@example.com',
       achievements: [
@@ -67,7 +67,7 @@ export default function AlumniPage() {
       graduationYear: 2023,
       currentRole: 'Management Consultant',
       testimonial: 'The leadership opportunities at Gavel Club prepared me for the fast-paced consulting world. I learned to think on my feet and communicate complex ideas clearly under pressure.',
-      image: '/alumni/priya-patel.jpg',
+      image: 'https://randomuser.me/api/portraits/women/44.jpg',
       linkedin: 'https://linkedin.com/in/priyapatel',
       email: 'priya.patel@example.com',
       achievements: [
@@ -85,7 +85,7 @@ export default function AlumniPage() {
       graduationYear: 2020,
       currentRole: 'Senior Product Manager',
       testimonial: 'The networking opportunities through Gavel Club opened doors I never imagined. The skills I developed in running meetings and facilitating discussions are now part of my daily work routine.',
-      image: '/alumni/michael-chen.jpg',
+      image: 'https://randomuser.me/api/portraits/men/22.jpg',
       linkedin: 'https://linkedin.com/in/michaelchen',
       email: 'michael.chen@example.com',
       achievements: [
@@ -103,7 +103,7 @@ export default function AlumniPage() {
       graduationYear: 2022,
       currentRole: 'Content Strategist',
       testimonial: 'Gavel Club taught me the power of storytelling. The feedback I received on my speeches helped me craft compelling narratives that I now use in content strategy for a global audience.',
-      image: '/alumni/emma-wilson.jpg',
+      image: 'https://randomuser.me/api/portraits/women/68.jpg',
       linkedin: 'https://linkedin.com/in/emmawilson',
       email: 'emma.wilson@example.com',
       achievements: [
@@ -121,7 +121,7 @@ export default function AlumniPage() {
       graduationYear: 2021,
       currentRole: 'Operations Manager',
       testimonial: 'The organizational and leadership skills I developed as Sergeant at Arms directly translated to my role in operations. Gavel Club gave me the confidence to lead teams and manage complex projects.',
-      image: '/alumni/alex-rodriguez.jpg',
+      image: 'https://randomuser.me/api/portraits/men/75.jpg',
       linkedin: 'https://linkedin.com/in/alexrodriguez',
       email: 'alex.rodriguez@example.com',
       achievements: [

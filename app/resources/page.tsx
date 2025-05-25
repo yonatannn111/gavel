@@ -102,132 +102,213 @@ const resourceTypes: ResourceTypeFilter[] = [
   { id: 'worksheet', name: 'Worksheets', icon: <File className="w-4 h-4 mr-2" /> },
 ];
 
-// Sample resources data
+// Sample resources data with actual YouTube thumbnails and links
 const resources: Resource[] = [
   {
     id: '1',
-    title: 'The Art of Public Speaking',
-    description: 'A comprehensive guide to mastering public speaking skills for beginners.',
-    type: 'pdf',
+    title: 'How to Start a Speech',
+    description: 'Learn the best techniques to start your speech with impact and capture your audience\'s attention immediately.',
+    type: 'video',
     category: 'beginner',
-    url: '#',
-    author: 'John Doe',
+    url: 'https://www.youtube.com/watch?v=w82a1FT5oX4',
+    thumbnail: 'https://img.youtube.com/vi/w82a1FT5oX4/maxresdefault.jpg',
+    author: 'Toastmasters International',
     date: '2023-01-15',
-    pages: 24,
-    featured: true
+    duration: '6:45',
+    featured: true,
+    level: 'beginner'
   },
   {
     id: '2',
-    title: 'Speech Structure 101',
-    description: 'Learn how to structure your speech for maximum impact and engagement.',
+    title: 'The 110 Techniques of Communication',
+    description: 'Master the art of effective communication with these 110 powerful techniques used by professional speakers.',
     type: 'video',
     category: 'speeches',
-    url: '#',
-    author: 'Jane Smith',
+    url: 'https://www.youtube.com/watch?v=5v-wyR5emRw',
+    thumbnail: 'https://img.youtube.com/vi/5v-wyR5emRw/maxresdefault.jpg',
+    author: 'Public Speaking Academy',
     date: '2023-02-20',
     duration: '15:30',
-    featured: true
-  },
-  {
-    id: '3',
-    title: 'Effective Evaluation Techniques',
-    description: 'Master the art of giving constructive feedback to fellow Toastmasters.',
-    type: 'article',
-    category: 'evaluation',
-    url: '#',
-    author: 'Robert Johnson',
-    date: '2023-03-10',
+    featured: true,
     level: 'intermediate'
   },
   {
+    id: '3',
+    title: 'How to Give an Evaluation',
+    description: 'Learn the Toastmasters method for giving effective, constructive speech evaluations.',
+    type: 'video',
+    category: 'evaluation',
+    url: 'https://www.youtube.com/watch?v=1BzRkLCOU4o',
+    thumbnail: 'https://img.youtube.com/vi/1BzRkLCOU4o/maxresdefault.jpg',
+    author: 'Toastmasters International',
+    date: '2023-03-10',
+    duration: '8:22',
+    level: 'beginner'
+  },
+  {
     id: '4',
-    title: 'Leadership in Action',
-    description: 'Develop your leadership skills through practical exercises and real-world examples.',
-    type: 'guide',
+    title: 'Leadership in Toastmasters',
+    description: 'Develop essential leadership skills through the Toastmasters program and real-world applications.',
+    type: 'video',
     category: 'leadership',
-    url: '#',
-    author: 'Emily Chen',
+    url: 'https://www.youtube.com/watch?v=2Z4mQlnx6Ys',
+    thumbnail: 'https://img.youtube.com/vi/2Z4mQlnx6Ys/maxresdefault.jpg',
+    author: 'Toastmasters International',
     date: '2023-04-05',
-    pages: 18,
-    level: 'advanced'
+    duration: '3:18',
+    level: 'intermediate'
   },
   {
     id: '5',
-    title: 'Contest Preparation Guide',
-    description: 'Everything you need to know to prepare for and excel in Toastmasters speech contests.',
-    type: 'pdf',
+    title: 'World Championship Speech 2022',
+    description: 'Watch the winning speech from the 2022 World Championship of Public Speaking.',
+    type: 'video',
     category: 'contests',
-    url: '#',
-    author: 'Michael Brown',
-    date: '2023-05-15',
-    pages: 32,
-    featured: true
+    url: 'https://www.youtube.com/watch?v=u06Y4oVqQqM',
+    thumbnail: 'https://img.youtube.com/vi/u06Y4oVqQqM/maxresdefault.jpg',
+    author: 'Toastmasters International',
+    date: '2022-08-15',
+    duration: '7:22',
+    featured: true,
+    level: 'advanced'
   },
   {
     id: '6',
     title: 'Hybrid Meeting Best Practices',
-    description: 'Tips and strategies for running effective hybrid Toastmasters meetings.',
+    description: 'Essential tips and strategies for running effective hybrid Toastmasters meetings.',
     type: 'article',
     category: 'hybrid',
-    url: '#',
-    author: 'Sarah Wilson',
+    url: 'https://www.toastmasters.org/magazine/articles/hybrid-meetings-best-practices',
+    author: 'Toastmasters International',
     date: '2023-06-20',
     level: 'beginner'
   },
   {
     id: '7',
-    title: 'Meeting Agenda Template',
-    description: 'A customizable template for planning and organizing your Toastmasters meetings.',
+    title: 'Speech Evaluation Form',
+    description: 'Downloadable PDF template for providing structured speech evaluations.',
     type: 'template',
     category: 'tools',
-    url: '#',
-    author: 'David Kim',
+    url: 'https://www.toastmasters.org/leadership-central/speech-evaluation-form',
+    author: 'Toastmasters International',
     date: '2023-07-10',
+    pages: 2,
     featured: true
   },
   {
     id: '8',
-    title: 'Speech Evaluation Worksheet',
-    description: 'A structured worksheet for providing detailed and constructive speech evaluations.',
-    type: 'worksheet',
-    category: 'evaluation',
-    url: '#',
-    author: 'Lisa Wong',
+    title: 'Table Topics Guide',
+    description: 'Master impromptu speaking with this comprehensive guide to Table Topics.',
+    type: 'guide',
+    category: 'speeches',
+    url: 'https://www.toastmasters.org/magazine/articles/table-topics-guide',
+    author: 'Toastmasters International',
     date: '2023-08-05',
     level: 'intermediate'
+  },
+  {
+    id: '9',
+    title: 'Icebreaker Speech Guide',
+    description: 'Step-by-step guide to preparing and delivering your first Icebreaker speech.',
+    type: 'guide',
+    category: 'beginner',
+    url: 'https://www.toastmasters.org/magazine/articles/icebreaker-speech-guide',
+    author: 'Toastmasters International',
+    date: '2023-09-12',
+    level: 'beginner'
+  },
+  {
+    id: '10',
+    title: 'How to Use Vocal Variety',
+    description: 'Learn techniques to improve your vocal variety and make your speeches more engaging.',
+    type: 'video',
+    category: 'speeches',
+    url: 'https://www.youtube.com/watch?v=Z0fT1pRcQhY',
+    thumbnail: 'https://img.youtube.com/vi/Z0fT1pRcQhY/maxresdefault.jpg',
+    author: 'Public Speaking Academy',
+    date: '2023-10-08',
+    duration: '12:45',
+    level: 'intermediate'
+  },
+  {
+    id: '11',
+    title: 'Meeting Roles Explained',
+    description: 'Comprehensive guide to all Toastmasters meeting roles and responsibilities.',
+    type: 'article',
+    category: 'beginner',
+    url: 'https://www.toastmasters.org/magazine/articles/meeting-roles-explained',
+    author: 'Toastmasters International',
+    date: '2023-11-15',
+    level: 'beginner'
+  },
+  {
+    id: '12',
+    title: 'Advanced Storytelling Techniques',
+    description: 'Take your storytelling to the next level with these advanced techniques from professional speakers.',
+    type: 'video',
+    category: 'speeches',
+    url: 'https://www.youtube.com/watch?v=AKfJd3i5szQ',
+    thumbnail: 'https://img.youtube.com/vi/AKfJd3i5szQ/maxresdefault.jpg',
+    author: 'Public Speaking Academy',
+    date: '2023-12-05',
+    duration: '18:30',
+    level: 'advanced'
   }
 ];
 
 // Component to display a single resource card
 const ResourceCard = ({ resource }: { resource: Resource }) => {
+  // Extract YouTube video ID for embedding
+  const getYoutubeThumbnail = (url: string) => {
+    if (!url.includes('youtube.com') && !url.includes('youtu.be')) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const youtubeId = resource.type === 'video' ? getYoutubeThumbnail(resource.url) : null;
+  const thumbnailUrl = youtubeId 
+    ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
+    : resource.thumbnail;
+
   return (
     <motion.div
       variants={fadeInUp}
-      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full"
+      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col h-full group"
     >
-      {resource.thumbnail ? (
-        <div className="h-48 bg-gray-100 relative">
-          <Image
-            src={resource.thumbnail}
-            alt={resource.title}
-            fill
-            className="object-cover"
-          />
-          {resource.type === 'video' && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-              <PlayCircle className="w-12 h-12 text-white" />
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="h-48 bg-gradient-to-br from-[#8B0000] to-[#B91C1C] flex items-center justify-center text-white">
-          {getIconByType(resource.type, 'w-12 h-12')}
-        </div>
-      )}
+      <a 
+        href={resource.url} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="block overflow-hidden"
+      >
+        {thumbnailUrl ? (
+          <div className="h-48 bg-gray-100 relative overflow-hidden">
+            <Image
+              src={thumbnailUrl}
+              alt={resource.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+            {resource.type === 'video' && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors duration-300">
+                <div className="w-14 h-14 bg-[#8B0000] rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                  <PlayCircle className="w-8 h-8 text-white" />
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="h-48 bg-gradient-to-br from-[#8B0000] to-[#B91C1C] flex items-center justify-center text-white">
+            {getIconByType(resource.type, 'w-16 h-16 opacity-80')}
+          </div>
+        )}
+      </a>
       
       <div className="p-6 flex flex-col flex-grow">
-        <div className="flex items-center mb-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#8B0000]/10 text-[#8B0000] mr-2">
+        <div className="flex items-center mb-2 flex-wrap gap-1">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#8B0000]/10 text-[#8B0000] mr-1">
             {resourceTypes.find(t => t.id === resource.type)?.name}
           </span>
           {resource.level && (
@@ -235,10 +316,17 @@ const ResourceCard = ({ resource }: { resource: Resource }) => {
               {resource.level.charAt(0).toUpperCase() + resource.level.slice(1)}
             </span>
           )}
+          {resource.featured && (
+            <span className="ml-auto inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+              Featured
+            </span>
+          )}
         </div>
         
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-          {resource.title}
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#8B0000] transition-colors">
+          <a href={resource.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+            {resource.title}
+          </a>
         </h3>
         
         <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
@@ -247,12 +335,12 @@ const ResourceCard = ({ resource }: { resource: Resource }) => {
         
         <div className="mt-auto pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center">
-              <UserIcon className="w-3 h-3 mr-1" />
-              <span>{resource.author}</span>
+            <div className="flex items-center max-w-[60%] truncate">
+              <UserIcon className="w-3 h-3 mr-1 flex-shrink-0" />
+              <span className="truncate">{resource.author}</span>
             </div>
             <div className="flex items-center">
-              <Calendar className="w-3 h-3 mr-1" />
+              <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
               <span>{new Date(resource.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
             </div>
           </div>
@@ -260,27 +348,28 @@ const ResourceCard = ({ resource }: { resource: Resource }) => {
           <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
             <div className="flex items-center text-xs text-gray-500">
               {resource.type === 'video' ? (
-                <Clock className="w-3 h-3 mr-1" />
+                <>
+                  <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span>{resource.duration}</span>
+                </>
               ) : resource.pages ? (
-                <File className="w-3 h-3 mr-1" />
-              ) : null}
-              <span>
-                {resource.type === 'video' 
-                  ? resource.duration 
-                  : resource.pages 
-                    ? `${resource.pages} pages` 
-                    : ''}
-              </span>
+                <>
+                  <File className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span>{resource.pages} page{resource.pages !== 1 ? 's' : ''}</span>
+                </>
+              ) : (
+                <span className="text-xs text-gray-400">Online resource</span>
+              )}
             </div>
             
             <a 
               href={resource.url} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center text-sm font-medium text-[#8B0000] hover:text-[#B91C1C] transition-colors"
+              className="inline-flex items-center text-sm font-medium text-[#8B0000] hover:text-[#B91C1C] transition-colors group-hover:underline"
             >
-              View Resource
-              <ArrowRight className="w-4 h-4 ml-1" />
+              {resource.type === 'video' ? 'Watch' : resource.type === 'pdf' ? 'Download' : 'View'}
+              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
         </div>

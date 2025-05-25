@@ -8,7 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award, Users, Trophy, Mic, BookOpen, Heart, Lightbulb, Target, Star, Check } from 'lucide-react';
 
 // Types
-interface AnimationVariants {
+import type { Variants } from 'framer-motion';
+
+type AnimationVariants = Variants & {
   hidden: {
     opacity: number;
     y?: number;
@@ -21,7 +23,7 @@ interface AnimationVariants {
     transition: {
       duration: number;
       ease?: string;
-      delay?: number;
+      delay?: number | ((i: number) => number);
       staggerChildren?: number;
       delayChildren?: number;
     };
@@ -31,6 +33,7 @@ interface AnimationVariants {
     y?: number;
     x?: number;
   };
+  [key: string]: any; // Allow any other variant names
 }
 
 interface CommitteeMember {
@@ -146,7 +149,7 @@ const AboutPage = (): JSX.Element => {
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 z-10"></div>
-          <Image 
+          <Image
             src="/information/about-hero.jpg" 
             alt="SMU Gavel Club Members"
             fill
@@ -252,7 +255,7 @@ const AboutPage = (): JSX.Element => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <Image 
+              <Image
                 src="/information/history.jpg" 
                 alt="SMU Gavel Club History"
                 fill
