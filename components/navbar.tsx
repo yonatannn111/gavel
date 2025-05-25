@@ -19,35 +19,27 @@ const routes: NavItem[] = [
     href: "/about", 
     label: "About Us",
     submenu: [
+      { href: "/about#overview", label: "Overview" },
+      { href: "/about#history", label: "Our History" },
       { href: "/about#mission", label: "Our Mission" },
       { href: "/about#team", label: "Our Team" },
-      { href: "/about#history", label: "Our History" },
     ] 
-  },
-  { 
-    href: "/pathways", 
-    label: "Pathways",
-    submenu: [
-      { href: "/pathways/overview", label: "Overview" },
-      { href: "/pathways/accredited-speaker", label: "Accredited Speaker Program" },
-      { href: "/pathways/learning-experience", label: "Pathways Learning Experience" }
-    ]
-  },
-  { 
-    href: "/resources", 
-    label: "Resources"
-  },
-  { 
-    href: "/gallery", 
-    label: "Gallery"
   },
   { 
     href: "/events", 
     label: "Events"
   },
   { 
+    href: "/gallery", 
+    label: "Gallery"
+  },
+  { 
     href: "/progression", 
     label: "Progression"
+  },
+  { 
+    href: "/resources", 
+    label: "Resources"
   },
   { 
     href: "/alumni", 
@@ -290,7 +282,7 @@ export default function Navbar() {
                             )}
                           >
                             {route.label}
-                            {route.submenu?.length > 0 && (
+                            {route.submenu && route.submenu.length > 0 && (
                               <ChevronDown
                                 className={cn(
                                   "h-4 w-4 transition-transform",

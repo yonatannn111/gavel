@@ -1,137 +1,171 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { GraduationCap, Briefcase, Linkedin, Mail, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  GraduationCap, 
+  Briefcase, 
+  Award, 
+  Mic, 
+  X, 
+  Linkedin, 
+  Mail, 
+  Search, 
+  Filter, 
+  Share2, 
+  Heart, 
+  MessageCircle, 
+  Bookmark, 
+  MoreHorizontal, 
+  ChevronLeft, 
+  ChevronRight,
+  Users,
+  ArrowRight,
+  Eye
+} from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 
-type Alumni = {
+interface Alumni {
   id: string;
   name: string;
   role: string;
   company: string;
   graduationYear: number;
+  currentRole: string;
   testimonial: string;
   image: string;
-  linkedin?: string;
-  email?: string;
+  linkedin: string;
+  email: string;
   achievements: string[];
-  currentRole: string;
-};
+  likes: number;
+  comments: number;
+  shares: number;
+  isLiked: boolean;
+  isBookmarked: boolean;
+  postTime: string;
+}
+
+const AnimatedDiv = ({ children, ...props }: any) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    transition={{ duration: 0.3 }}
+    {...props}
+  >
+    {children}
+  </motion.div>
+);
 
 export default function AlumniPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'recent' | 'featured'>('all');
-  const [selectedAlumni, setSelectedAlumni] = useState<Alumni | null>(null);
-
-  const alumni: Alumni[] = [
+  const [selectedAlum, setSelectedAlum] = useState<Alumni | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const storiesRef = useRef<HTMLDivElement>(null);
+  const [alumni, setAlumni] = useState<Alumni[]>([
     {
-      id: 'sarah-johnson',
-      name: 'Sarah Johnson',
+      id: 'henok-elias',
+      name: 'Henok Elias',
       role: 'Former President',
-      company: 'Microsoft',
+      company: 'Appleazy',
       graduationYear: 2022,
-      currentRole: 'Product Manager',
+      currentRole: 'Training Manager at Appleazy',
       testimonial: 'My time at SMU Gavel Club was transformative. The public speaking and leadership skills I developed have been instrumental in my career. I still use the evaluation techniques I learned in every team meeting!',
-      image: 'https://randomuser.me/api/portraits/women/1.jpg',
-      linkedin: 'https://linkedin.com/in/sarahjohnson',
-      email: 'sarah.johnson@example.com',
+      image: 'alumnis/alumni1.jpg',
+      linkedin: 'https://et.linkedin.com/in/henok-elias-95011b1a9',
+      email: '#',
       achievements: [
-        'Competent Communicator (CC) Award',
-        'Club President (2021-2022)',
-        'Division Level Speech Contest Winner',
-        'Mentored 10+ members'
-      ]
+        'Marketing Graduate from St. Mary\'s University',
+        'Former President of SMU Gavel Club',
+        'Training and Development Specialist',
+        'Expert in Leadership Development'
+      ],
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      isLiked: false,
+      isBookmarked: false,
+      postTime: '2022-01-01'
     },
     {
-      id: 'david-kim',
-      name: 'David Kim',
-      role: 'Former VP Education',
-      company: 'Google',
-      graduationYear: 2021,
-      currentRole: 'UX Designer',
-      testimonial: 'The structured learning path in Gavel Club gave me the confidence to present my design work effectively. The feedback culture helped me improve my communication skills dramatically.',
-      image: 'https://randomuser.me/api/portraits/men/32.jpg',
-      linkedin: 'https://linkedin.com/in/davidkim',
-      email: 'david.kim@example.com',
-      achievements: [
-        'Advanced Leader Bronze (ALB)',
-        'Organized 3 successful workshops',
-        'Mentor of the Year 2020',
-        'Featured speaker at Regional Conference'
-      ]
-    },
-    {
-      id: 'priya-patel',
-      name: 'Priya Patel',
-      role: 'Former Treasurer',
-      company: 'McKinsey & Company',
+      id: 'getacher-tsegaye',
+      name: 'Getacher Tsegaye',
+      role: 'Former Member',
+      company: 'Yanos IT Solutions',
       graduationYear: 2023,
-      currentRole: 'Management Consultant',
-      testimonial: 'The leadership opportunities at Gavel Club prepared me for the fast-paced consulting world. I learned to think on my feet and communicate complex ideas clearly under pressure.',
-      image: 'https://randomuser.me/api/portraits/women/44.jpg',
-      linkedin: 'https://linkedin.com/in/priyapatel',
-      email: 'priya.patel@example.com',
+      currentRole: 'Software Developer at Yanos IT Solutions',
+      testimonial: 'The technical and communication skills I developed at SMU Gavel Club have been invaluable in my software development career. The ability to explain complex technical concepts clearly is something I use daily.',
+      image: 'alumnis/alumni2.jpg',
+      linkedin: 'https://et.linkedin.com/in/getacher-tsegaye-8462042bb',
+      email: '#',
       achievements: [
-        'Pathways Level 4 Completed',
-        'Led club rebranding initiative',
-        'Increased member retention by 40%',
-        'Best Table Topics Speaker Award'
-      ]
+        'Computer Science Graduate from St. Mary\'s University',
+        'Former Senior CADD Officer at Amhara Bank',
+        'Full-stack Development Specialist',
+        'Active contributor to open-source projects'
+      ],
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      isLiked: false,
+      isBookmarked: false,
+      postTime: '2023-01-01'
     },
     {
-      id: 'michael-chen',
-      name: 'Michael Chen',
-      role: 'Former VP Membership',
-      company: 'Amazon',
-      graduationYear: 2020,
-      currentRole: 'Senior Product Manager',
-      testimonial: 'The networking opportunities through Gavel Club opened doors I never imagined. The skills I developed in running meetings and facilitating discussions are now part of my daily work routine.',
-      image: 'https://randomuser.me/api/portraits/men/22.jpg',
-      linkedin: 'https://linkedin.com/in/michaelchen',
-      email: 'michael.chen@example.com',
-      achievements: [
-        'Distinguished Toastmaster (DTM)',
-        'Club Growth Director (2020)',
-        'Tripled club membership',
-        'Keynote speaker at International Conference'
-      ]
-    },
-    {
-      id: 'emma-wilson',
-      name: 'Emma Wilson',
+      id: 'eyuel-mamushet',
+      name: 'Eyuel Mamushet',
       role: 'Former Secretary',
-      company: 'Netflix',
-      graduationYear: 2022,
-      currentRole: 'Content Strategist',
-      testimonial: 'Gavel Club taught me the power of storytelling. The feedback I received on my speeches helped me craft compelling narratives that I now use in content strategy for a global audience.',
-      image: 'https://randomuser.me/api/portraits/women/68.jpg',
-      linkedin: 'https://linkedin.com/in/emmawilson',
-      email: 'emma.wilson@example.com',
+      company: 'Self-employed',
+      graduationYear: 2023,
+      currentRole: 'Self-employed',
+      testimonial: 'My experience as Secretary at SMU Gavel Club taught me valuable organizational and communication skills that I now apply in my entrepreneurial journey. The club was instrumental in building my confidence and professional network.',
+      image: 'alumnis/alumni3.jpg',
+      linkedin: 'https://et.linkedin.com/in/eyuel-mamushet-599a29311',
+      email: '#',
       achievements: [
-        'Pathways Level 3 Completed',
-        'Best Evaluator Award 2021',
-        'Launched Alumni Mentorship Program',
-        'Guest Lecturer at SMU'
-      ]
+        'Accounting & Finance major at St. Mary\'s University',
+        'Former Secretary of SMU Gavel Club',
+        'Financial Management Expert',
+        'Entrepreneur and Business Consultant'
+      ],
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      isLiked: false,
+      isBookmarked: false,
+      postTime: '2023-01-01'
     },
     {
-      id: 'alex-rodriguez',
-      name: 'Alex Rodriguez',
-      role: 'Former SAA',
-      company: 'Tesla',
-      graduationYear: 2021,
-      currentRole: 'Operations Manager',
-      testimonial: 'The organizational and leadership skills I developed as Sergeant at Arms directly translated to my role in operations. Gavel Club gave me the confidence to lead teams and manage complex projects.',
-      image: 'https://randomuser.me/api/portraits/men/75.jpg',
-      linkedin: 'https://linkedin.com/in/alexrodriguez',
-      email: 'alex.rodriguez@example.com',
+      id: 'yared-solomon',
+      name: 'Yared Solomon',
+      role: 'Former VP Membership',
+      company: 'Ampoule Software Development',
+      graduationYear: 2022,
+      currentRole: 'Frontend Developer at Ampoule Software Development',
+      testimonial: 'Serving as VP Membership at SMU Gavel Club was a turning point in my professional development. The leadership and communication skills I gained have been crucial in my tech career, especially when collaborating with cross-functional teams.',
+      image: 'alumnis/alumni4.jpg',
+      linkedin: 'https://et.linkedin.com/in/yared-solomon-79b544239',
+      email: '#',
       achievements: [
-        'Competent Leader (CL) Award',
-        'Streamlined club operations',
-        'Mentored 15+ members',
-        'Organized 3 successful conferences'
-      ]
+        'Computer Science Graduate from St. Mary\'s University',
+        'Studying Marketing Management at Addis Ababa University',
+        'Former VP Membership of SMU Gavel Club',
+        'Frontend Development Specialist'
+      ],
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      isLiked: false,
+      isBookmarked: false,
+      postTime: '2022-01-01'
     }
-  ];
+  ]);
 
   const filteredAlumni = activeTab === 'all' 
     ? alumni 
@@ -139,98 +173,228 @@ export default function AlumniPage() {
       ? alumni.filter(a => a.graduationYear >= 2022)
       : alumni.filter(a => a.achievements.some(ach => ach.includes('DTM') || ach.includes('Keynote')));
 
-  const openModal = (alumni: Alumni) => {
-    setSelectedAlumni(alumni);
+  const openModal = (alum: Alumni) => {
+    setSelectedAlum(alum);
+    setIsModalOpen(true);
     document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
-    setSelectedAlumni(null);
+    setIsModalOpen(false);
+    setSelectedAlum(null);
     document.body.style.overflow = 'auto';
   };
 
+  const toggleLike = (id: string) => {
+    setAlumni(alumni.map(alum => 
+      alum.id === id 
+        ? { ...alum, isLiked: !alum.isLiked, likes: alum.isLiked ? alum.likes - 1 : alum.likes + 1 }
+        : alum
+    ));
+  };
+
+  const toggleBookmark = (id: string) => {
+    setAlumni(alumni.map(alum => 
+      alum.id === id 
+        ? { ...alum, isBookmarked: !alum.isBookmarked }
+        : alum
+    ));
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#8B0000] to-[#6B0000] text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Alumni Spotlights</h1>
-          <p className="text-xl max-w-3xl mx-auto">Discover how our alumni are making an impact in their careers and communities</p>
+      <section className="relative overflow-hidden bg-gradient-to-r from-[#8B0000] to-[#6B0000] text-white pt-28 pb-32 md:pt-36 md:pb-40">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="mb-6 overflow-visible">
+              <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200 leading-[0.9] pb-3">
+                Alumni Spotlights
+              </h1>
+            </div>
+            <p className="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
+              Discover how our alumni are making an impact in their careers and communities
+            </p>
+          </motion.div>
         </div>
       </section>
 
       {/* Tabs */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-transparent">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-6 py-2 rounded-full font-medium transition-colors ${
-                activeTab === 'all' 
-                  ? 'bg-[#8B0000] text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              All Alumni
-            </button>
-            <button
-              onClick={() => setActiveTab('recent')}
-              className={`px-6 py-2 rounded-full font-medium transition-colors ${
-                activeTab === 'recent' 
-                  ? 'bg-[#8B0000] text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Recent Graduates
-            </button>
-            <button
-              onClick={() => setActiveTab('featured')}
-              className={`px-6 py-2 rounded-full font-medium transition-colors ${
-                activeTab === 'featured' 
-                  ? 'bg-[#8B0000] text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Featured Alumni
-            </button>
-          </div>
+          <motion.div 
+            className="flex flex-wrap justify-center gap-3 mb-12"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            {[
+              { id: 'all', label: 'All Alumni', icon: <Users className="w-4 h-4 mr-2" /> },
+              { id: 'recent', label: 'Recent Graduates', icon: <GraduationCap className="w-4 h-4 mr-2" /> },
+              { id: 'featured', label: 'Featured Alumni', icon: <Award className="w-4 h-4 mr-2" /> }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={cn(
+                  "flex items-center px-5 py-2.5 rounded-full font-medium transition-all duration-300",
+                  activeTab === tab.id
+                    ? 'bg-[#8B0000] text-white shadow-lg shadow-red-900/20'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg'
+                )}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
+          </motion.div>
 
           {/* Alumni Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredAlumni.map((alum, index) => (
-              <motion.div
-                key={alum.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-              >
-                <div className="h-48 bg-gray-200 relative">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4">
-                    <h3 className="text-2xl font-bold text-white">{alum.name}</h3>
-                    <p className="text-gray-200">{alum.role} • Class of {alum.graduationYear}</p>
+          <AnimatePresence>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredAlumni.map((alum, index) => (
+                <motion.div
+                  key={alum.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ 
+                    duration: 0.4,
+                    delay: index * 0.05,
+                    ease: [0.4, 0, 0.2, 1]
+                  }}
+                  className="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1 flex flex-col h-full"
+                >
+                  {/* Header with Profile Image and Basic Info */}
+                  <div className="relative">
+                    {/* Cover Photo */}
+                    <div className="h-32 bg-gradient-to-r from-[#8B0000] to-[#6B0000] w-full"></div>
+                    
+                    {/* Profile Image */}
+                    <div className="absolute -bottom-10 left-6 w-20 h-20 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <Image
+                          src={`/${alum.image}`}
+                          alt={`${alum.name}, ${alum.currentRole} at ${alum.company}`}
+                          width={80}
+                          height={80}
+                          className="w-full h-full object-cover"
+                          priority={index < 4}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* View More Button */}
+                    <div className="absolute right-4 bottom-4">
+                      <button 
+                        onClick={() => openModal(alum)}
+                        className="px-3 py-1.5 bg-white hover:bg-gray-50 text-sm font-medium text-[#8B0000] rounded-full border border-[#8B0000]/20 hover:border-[#8B0000]/40 transition-all shadow-sm flex items-center space-x-1.5"
+                        aria-label={`View ${alum.name}'s profile`}
+                      >
+                        <span>View More</span>
+                        <ChevronRight className="w-3.5 h-3.5 mt-0.5" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center text-gray-600 mb-4">
-                    <Briefcase className="w-5 h-5 mr-2" />
-                    <span>{alum.currentRole} at {alum.company}</span>
+                  
+                  {/* Content */}
+                  <div className="pt-10 pb-6 px-6 flex-1 flex flex-col">
+                    {/* Name and Role */}
+                    <div className="mb-1">
+                      <h3 className="text-lg font-bold text-gray-900">{alum.name}</h3>
+                      <p className="text-sm text-gray-600">{alum.currentRole}</p>
+                      <p className="text-xs text-[#8B0000] font-medium mt-1">Class of {alum.graduationYear}</p>
+                    </div>
+                    
+                    {/* Stats */}
+                    <div className="flex justify-between text-xs text-gray-500 my-4 border-t border-b border-gray-100 py-3">
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-900">{alum.likes}</div>
+                        <div>Likes</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-900">{alum.comments}</div>
+                        <div>Views</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-900">{alum.shares}</div>
+                        <div>Shares</div>
+                      </div>
+                    </div>
+                    
+                    {/* Testimonial Preview */}
+                    <div className="mb-4 flex-1 min-h-[4.5rem]">
+                      <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                        "{alum.testimonial}"
+                      </p>
+                    </div>
+                    
+                    {/* Action Buttons */}
+                    <div className="flex items-center justify-between border-t border-gray-100 pt-3 px-1">
+                      <div className="flex items-center">
+                        <button 
+                          onClick={() => toggleLike(alum.id)}
+                          className={`flex items-center space-x-1.5 py-1.5 px-3 rounded-md text-sm font-medium transition-colors ${alum.isLiked ? 'text-red-500 hover:bg-red-50' : 'text-gray-500 hover:bg-gray-50'}`}
+                        >
+                          <Heart 
+                            className={`w-5 h-5 ${alum.isLiked ? 'fill-current' : ''}`} 
+                            size={18} 
+                            strokeWidth={alum.isLiked ? 2 : 1.5} 
+                            fill={alum.isLiked ? 'currentColor' : 'none'}
+                          />
+                          <span>{alum.isLiked ? 'Liked' : 'Like'}</span>
+                        </button>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        {alum.linkedin && (
+                          <a 
+                            href={alum.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 transition-colors hover:text-[#0A66C2]"
+                            aria-label={`${alum.name}'s LinkedIn`}
+                          >
+                            <Linkedin className="w-5 h-5" />
+                          </a>
+                        )}
+                        {alum.email && (
+                          <a 
+                            href={`mailto:${alum.email}`}
+                            className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 transition-colors hover:text-[#EA4335]"
+                            aria-label={`Email ${alum.name}`}
+                          >
+                            <Mail className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-gray-600 mb-6 line-clamp-3">"{alum.testimonial}"</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{alum.achievements[0]}</span>
-                    <button 
-                      onClick={() => openModal(alum)}
-                      className="text-[#8B0000] hover:text-[#6B0000] font-medium flex items-center"
-                    >
-                      Read more <ArrowRight className="ml-1 w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </div>
+          </AnimatePresence>
         </div>
       </section>
 
@@ -248,92 +412,163 @@ export default function AlumniPage() {
       </section>
 
       {/* Alumni Modal */}
-      {selectedAlumni && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-          <div 
-            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {selectedAlum && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+            onClick={closeModal}
           >
-            <button 
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
             >
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            
-            <div className="p-8">
-              <div className="flex flex-col md:flex-row gap-8 mb-8">
-                <div className="w-full md:w-1/3">
-                  <div className="w-full h-64 bg-gray-200 rounded-xl overflow-hidden mb-4">
-                    <div className="w-full h-full bg-gradient-to-br from-[#8B0000] to-[#6B0000] flex items-center justify-center text-white text-4xl font-bold">
-                      {selectedAlumni.name.split(' ').map(n => n[0]).join('')}
+              <div className="sticky top-0 bg-white z-10 p-4 border-b border-gray-100 flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <button 
+                    onClick={closeModal}
+                    className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-gray-600" />
+                  </button>
+                  <h2 className="text-lg font-semibold text-gray-900">Alumni Profile</h2>
+                </div>
+                <button 
+                  onClick={closeModal}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+              
+              <div className="p-6 md:p-8">
+                <div className="flex flex-col md:flex-row gap-8 mb-8">
+                  <div className="w-full md:w-1/3">
+                    <motion.div 
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.1 }}
+                      className="w-full aspect-square bg-gray-100 rounded-2xl overflow-hidden mb-4 shadow-md"
+                    >
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <Image
+                          src={`/${selectedAlum.image}`}
+                          alt={selectedAlum.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-cover"
+                          priority
+                        />
+                      </div>
+                    </motion.div>
+                    
+                    <div className="flex justify-center space-x-6 mb-6">
+                      <button 
+                        onClick={() => {
+                          if (navigator.share) {
+                            navigator.share({
+                              title: `Check out ${selectedAlum.name}'s profile`,
+                              text: `From SMU Gavel Club alumni`,
+                              url: window.location.href
+                            }).catch(console.error);
+                          } else {
+                            // Fallback for browsers that don't support Web Share API
+                            navigator.clipboard.writeText(window.location.href);
+                            // You might want to add a toast notification here
+                          }
+                        }}
+                        className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                        aria-label="Share profile"
+                      >
+                        <Share2 className="w-6 h-6" />
+                      </button>
+                    </div>
+                    
+                    <div className="bg-gradient-to-r from-[#8B0000] to-[#6B0000] p-4 rounded-xl text-white text-center">
+                      <div className="text-sm font-medium mb-1">Class of</div>
+                      <div className="text-2xl font-bold">{selectedAlum.graduationYear}</div>
+                      <div className="text-xs opacity-80 mt-1">Graduation Year</div>
                     </div>
                   </div>
-                  <div className="flex justify-center space-x-4">
-                    {selectedAlumni.linkedin && (
-                      <a 
-                        href={selectedAlumni.linkedin} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-gray-600 hover:text-[#0077B5] transition-colors"
-                        aria-label={`Connect with ${selectedAlumni.name} on LinkedIn`}
-                      >
-                        <Linkedin className="w-6 h-6" />
-                      </a>
-                    )}
-                    {selectedAlumni.email && (
-                      <a 
-                        href={`mailto:${selectedAlumni.email}`}
-                        className="text-gray-600 hover:text-[#8B0000] transition-colors"
-                        aria-label={`Email ${selectedAlumni.name}`}
-                      >
-                        <Mail className="w-6 h-6" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-                <div className="w-full md:w-2/3">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">{selectedAlumni.name}</h2>
-                  <p className="text-xl text-gray-600 mb-4">{selectedAlumni.currentRole} at {selectedAlumni.company}</p>
-                  <div className="flex items-center text-gray-500 mb-6">
-                    <GraduationCap className="w-5 h-5 mr-2" />
-                    <span>SMU Gavel Club {selectedAlumni.role} • Class of {selectedAlumni.graduationYear}</span>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded-lg mb-6">
-                    <p className="italic text-gray-700">"{selectedAlumni.testimonial}"</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Gavel Club Achievements</h3>
-                <ul className="space-y-2">
-                  {selectedAlumni.achievements.map((achievement, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-[#8B0000] text-white text-xs font-medium mr-3 mt-0.5">
-                        {index + 1}
+                  
+                  <div className="w-full md:w-2/3">
+                    <motion.div
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <h2 className="text-3xl font-bold text-gray-900 mb-1">{selectedAlum.name}</h2>
+                      <p className="text-xl text-gray-600 mb-2">{selectedAlum.currentRole}</p>
+                      <div className="flex items-center text-gray-500 mb-6 text-sm">
+                        <GraduationCap className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span>{selectedAlum.role} • Class of {selectedAlum.graduationYear}</span>
                       </div>
-                      <span className="text-gray-700">{achievement}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      
+                      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg mb-6">
+                        <p className="text-blue-700 italic">"{selectedAlum.testimonial}"</p>
+                      </div>
+                    </motion.div>
 
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Advice for Current Members</h3>
-                <p className="text-gray-700 mb-4">
-                  {selectedAlumni.name} encourages current members to take full advantage of the opportunities Gavel Club provides. "The skills you develop here—public speaking, leadership, and critical thinking—are highly transferable and will serve you well in any career path."
-                </p>
-                <p className="text-gray-700">
-                  {selectedAlumni.name} is open to connecting with current members who are interested in learning more about their career path or seeking mentorship.
-                </p>
+                    <motion.div
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                      className="mb-8"
+                    >
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <Award className="w-5 h-5 mr-2 text-amber-500" />
+                        Gavel Club Achievements
+                      </h3>
+                      <ul className="space-y-3">
+                        {selectedAlum.achievements.map((achievement, index) => (
+                          <motion.li 
+                            key={index} 
+                            initial={{ x: -10, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.4 + (index * 0.05) }}
+                            className="flex items-start group"
+                          >
+                            <div className="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-gradient-to-br from-[#8B0000] to-[#6B0000] text-white text-xs font-medium mr-3 mt-0.5 transform group-hover:scale-110 transition-transform">
+                              {index + 1}
+                            </div>
+                            <span className="text-gray-700">{achievement}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </motion.div>
+
+                    <motion.div 
+                      className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-2xl border border-gray-100 shadow-sm"
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <MessageCircle className="w-5 h-5 mr-2 text-[#8B0000]" />
+                        Advice for Current Members
+                      </h3>
+                      <div className="space-y-4 text-gray-700">
+                        <p>
+                          {selectedAlum.name} encourages current members to take full advantage of the opportunities Gavel Club provides. "The skills you develop here—public speaking, leadership, and critical thinking—are highly transferable and will serve you well in any career path."
+                        </p>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

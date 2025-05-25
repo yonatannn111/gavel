@@ -24,6 +24,7 @@ import {
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import CallToAction from "@/components/CallToAction";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -576,17 +577,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-[#8B0000] text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Find Your Voice?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join SMU Gavel Club today and embark on a journey of personal and professional growth.
-          </p>
-          <Button asChild size="lg" className="bg-white text-[#8B0000] hover:bg-gray-100">
-            <Link href="/join">Become a Member</Link>
-          </Button>
-        </div>
-      </section>
+      <CallToAction />
     </div>
   );
 }

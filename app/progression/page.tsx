@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Trophy, Award, BarChart2, Users as UsersIcon, BookOpen, GraduationCap, Mic } from 'lucide-react';
 
 type SpeechProgress = {
@@ -289,6 +290,43 @@ export default function ProgressionPage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <motion.div 
+            className="max-w-5xl mx-auto bg-gradient-to-r from-[#8B0000] to-[#6B0000] rounded-2xl shadow-xl overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <div className="p-8 md:p-12 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Start Your Journey?</h2>
+              <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
+                Join SMU Gavel Club today and unlock your full potential as a speaker and leader.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link 
+                  href="/join"
+                  className="bg-white text-[#8B0000] hover:bg-gray-100 px-8 py-3 rounded-full font-medium text-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  Join Now
+                </Link>
+                <Link 
+                  href="/about"
+                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded-full font-medium text-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  Learn More
+                </Link>
+              </div>
+              <p className="mt-6 text-gray-200 text-sm">
+                No commitment required. Cancel anytime.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
