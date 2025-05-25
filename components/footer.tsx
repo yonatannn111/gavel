@@ -84,8 +84,10 @@ export default function Footer() {
                 { name: 'About Us', href: '/about' },
                 { name: 'Events', href: '/events' },
                 { name: 'Gallery', href: '/gallery' },
-                { name: 'Join Us', href: '/join' },
-                { name: 'Contact', href: '/contact' }
+                { name: 'Progression', href: '/progression' },
+                { name: 'Resources', href: '/resources' },
+                { name: 'Alumni', href: '/alumni' },
+                { name: 'Join Us', href: '/join' }
               ].map((item, index) => (
                 <motion.li 
                   key={item.name}

@@ -19,7 +19,8 @@ import {
   Award,
   User as UserIcon,
   Clock,
-  Calendar
+  Calendar,
+  Star
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
@@ -274,91 +275,89 @@ const ResourceCard = ({ resource }: { resource: Resource }) => {
   return (
     <motion.div
       variants={fadeInUp}
-      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col h-full group"
+      className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full group border border-gray-100"
     >
-      <a 
-        href={resource.url} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="block overflow-hidden"
-      >
-        {thumbnailUrl ? (
-          <div className="h-48 bg-gray-100 relative overflow-hidden">
-            <Image
-              src={thumbnailUrl}
-              alt={resource.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            {resource.type === 'video' && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors duration-300">
-                <div className="w-14 h-14 bg-[#8B0000] rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                  <PlayCircle className="w-8 h-8 text-white" />
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="h-48 bg-gradient-to-br from-[#8B0000] to-[#B91C1C] flex items-center justify-center text-white">
-            {getIconByType(resource.type, 'w-16 h-16 opacity-80')}
+      {/* Thumbnail - Consistent colored background with icon */}
+      <div className="relative aspect-video overflow-hidden">
+        <div className="h-full w-full bg-gradient-to-br from-[#8B0000] to-[#B91C1C] flex flex-col items-center justify-center p-6 text-center group-hover:opacity-90 transition-opacity duration-300">
+          {getIconByType(resource.type, 'w-12 h-12 text-white/90 mb-3 transition-transform duration-300 group-hover:scale-110')}
+          <span className="text-sm font-medium text-white/90 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm">
+            {resourceTypes.find(t => t.id === resource.type)?.name}
+          </span>
+        </div>
+        
+        {/* Featured Badge - More subtle */}
+        {resource.featured && (
+          <div className="absolute top-3 right-3 bg-white/90 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center shadow-sm">
+            <Star className="w-3 h-3 mr-1" />
+            Featured
           </div>
         )}
-      </a>
+      </div>
       
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="flex items-center mb-2 flex-wrap gap-1">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#8B0000]/10 text-[#8B0000] mr-1">
+      {/* Card Content */}
+      <div className="p-5 flex flex-col flex-grow">
+        {/* Type and Level */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-xs font-medium text-[#8B0000] bg-[#FEE2E2] px-2.5 py-1 rounded-full">
             {resourceTypes.find(t => t.id === resource.type)?.name}
           </span>
           {resource.level && (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <span className="text-xs font-medium text-blue-700 bg-blue-100 px-2.5 py-1 rounded-full">
               {resource.level.charAt(0).toUpperCase() + resource.level.slice(1)}
-            </span>
-          )}
-          {resource.featured && (
-            <span className="ml-auto inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-              Featured
             </span>
           )}
         </div>
         
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#8B0000] transition-colors">
-          <a href={resource.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 leading-tight">
+          <a 
+            href={resource.url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="hover:text-[#8B0000] transition-colors"
+          >
             {resource.title}
           </a>
         </h3>
         
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+        {/* Description */}
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
           {resource.description}
         </p>
         
+        {/* Footer */}
         <div className="mt-auto pt-4 border-t border-gray-100">
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center max-w-[60%] truncate">
-              <UserIcon className="w-3 h-3 mr-1 flex-shrink-0" />
+          {/* Author and Date */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center text-sm text-gray-600">
+              <UserIcon className="w-4 h-4 mr-1.5 text-gray-400" />
               <span className="truncate">{resource.author}</span>
             </div>
-            <div className="flex items-center">
-              <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span>{new Date(resource.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+            <div className="text-xs text-gray-500 flex items-center">
+              <Calendar className="w-3.5 h-3.5 mr-1" />
+              {new Date(resource.date).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+              })}
             </div>
           </div>
           
-          <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
-            <div className="flex items-center text-xs text-gray-500">
-              {resource.type === 'video' ? (
-                <>
-                  <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
-                  <span>{resource.duration}</span>
-                </>
-              ) : resource.pages ? (
-                <>
-                  <File className="w-3 h-3 mr-1 flex-shrink-0" />
-                  <span>{resource.pages} page{resource.pages !== 1 ? 's' : ''}</span>
-                </>
-              ) : (
-                <span className="text-xs text-gray-400">Online resource</span>
+          {/* Action Bar */}
+          <div className="flex items-center justify-between">
+            <div className="text-xs text-gray-500 flex items-center">
+              {resource.type === 'video' && (
+                <span className="flex items-center">
+                  <Clock className="w-3.5 h-3.5 mr-1" />
+                  {resource.duration}
+                </span>
+              )}
+              {resource.pages && (
+                <span className="flex items-center ml-3">
+                  <File className="w-3.5 h-3.5 mr-1" />
+                  {resource.pages} page{resource.pages !== 1 ? 's' : ''}
+                </span>
               )}
             </div>
             
