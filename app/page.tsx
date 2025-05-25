@@ -491,22 +491,22 @@ export default function Home() {
                 {
                   id: 1,
                   quote: "Joining the SMU Gavel Club was one of the best decisions I made during my university years. It transformed me from someone who feared public speaking to someone who now embraces it.",
-                  name: "Jane Lee",
+                  name: "Henok Elias",
                   role: "Member since 2023",
                   initials: "JL",
                 },
                 {
                   id: 2,
                   quote: "The supportive environment at Gavel Club helped me develop not just as a speaker, but as a leader. The skills I gained here have been invaluable in my professional career.",
-                  name: "Michael Tan",
+                  name: "Getacher Tsegaye",
                   role: "Member since 2022",
                   initials: "MT",
                 },
                 {
                   id: 3,
                   quote: "As an international student, Gavel Club provided me with a platform to improve my English speaking skills and make friends. The feedback I received was always constructive and encouraging.",
-                  name: "Sarah Garcia",
-                  role: "Member since 2024",
+                  name: "Eyuel Mamushet",
+                  role: "Secretary since 2024",
                   initials: "SG",
                 },
                 {

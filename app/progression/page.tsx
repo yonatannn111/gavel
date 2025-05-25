@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, Award, BarChart2, Users as UsersIcon, BookOpen, GraduationCap } from 'lucide-react';
+import { Trophy, Award, BarChart2, Users as UsersIcon, BookOpen, GraduationCap, Mic } from 'lucide-react';
 
-type Pathway = {
+type SpeechProgress = {
   id: string;
   title: string;
   description: string;
@@ -17,65 +17,33 @@ type Pathway = {
 type MemberProgress = {
   name: string;
   role: string;
-  level: string;
   completedSpeeches: number;
   nextMilestone: string;
   avatar: string;
 };
 
 export default function ProgressionPage() {
-  const pathways: Pathway[] = [
-    {
-      id: 'paths',
-      title: 'Pathways',
-      description: 'Master the art of public speaking through structured learning paths',
-      levels: [
-        {
-          name: 'Level 1: Mastering Fundamentals',
-          requirements: [
-            'Ice Breaker',
-            'Evaluation and Feedback',
-            'Researching and Presenting',
-            'Managing Time',
-            'Vocal Variety and Body Language'
-          ],
-          completed: true
-        },
-        {
-          name: 'Level 2: Learning Your Style',
-          requirements: [
-            'Understanding Your Communication Style',
-            'Active Listening',
-            'Effective Body Language',
-            'Connect with Your Audience',
-            'Inspire Your Audience'
-          ],
-          completed: false
-        },
-      ]
-    },
-    {
-      id: 'cc',
-      title: 'Competent Communicator (CC)',
-      description: 'Complete 10 speeches to achieve the Competent Communicator award',
-      levels: Array.from({ length: 10 }, (_, i) => ({
-        name: `Speech ${i + 1}`,
-        requirements: [
-          i === 0 ? 'Ice Breaker (4-6 min)' : `Project ${i + 1} (5-7 min)`,
-          'Speech Objectives',
-          'Evaluation'
-        ],
-        completed: i < 3 // First 3 speeches completed
-      }))
-    }
-  ];
+  const speechProgress: SpeechProgress = {
+    id: 'cc',
+    title: 'Competent Communicator (CC)',
+    description: 'Complete 10 speeches to achieve the Competent Communicator award',
+    levels: Array.from({ length: 10 }, (_, i) => ({
+      name: `Speech ${i + 1}`,
+      requirements: [
+        i === 0 ? 'Ice Breaker (4-6 min)' : `Project ${i + 1} (5-7 min)`,
+        'Speech Objectives',
+        'Evaluation'
+      ],
+      completed: i < 3 // First 3 speeches completed
+    }))
+  };
 
   const leaderboard: MemberProgress[] = [
-    { name: 'Alex Johnson', role: 'Vice President Education', level: 'Pathways Level 3', completedSpeeches: 15, nextMilestone: 'Advanced Leader Bronze', avatar: '/avatars/alex.jpg' },
-    { name: 'Sarah Williams', role: 'President', level: 'Pathways Level 2', completedSpeeches: 10, nextMilestone: 'Competent Leader', avatar: '/avatars/sarah.jpg' },
-    { name: 'Michael Chen', role: 'Treasurer', level: 'Pathways Level 2', completedSpeeches: 8, nextMilestone: 'Competent Communicator', avatar: '/avatars/michael.jpg' },
-    { name: 'Emma Davis', role: 'Secretary', level: 'Pathways Level 1', completedSpeeches: 5, nextMilestone: 'Pathways Level 2', avatar: '/avatars/emma.jpg' },
-    { name: 'James Wilson', role: 'Member', level: 'Pathways Level 1', completedSpeeches: 3, nextMilestone: 'Pathways Level 2', avatar: '/avatars/james.jpg' },
+    { name: 'Yohanes Jember', role: 'Member', completedSpeeches: 15, nextMilestone: 'Advanced Communicator Bronze', avatar: '/avatars/alex.jpg' },
+    { name: 'Rediet Asfaw', role: 'Member', completedSpeeches: 10, nextMilestone: 'Competent Communicator', avatar: '/avatars/sarah.jpg' },
+    { name: 'Khalid Ahmed', role: 'Sergeant at Arms', completedSpeeches: 8, nextMilestone: 'Competent Communicator', avatar: '/avatars/michael.jpg' },
+    { name: 'Emma Davis', role: 'Secretary', completedSpeeches: 5, nextMilestone: 'Competent Communicator', avatar: '/avatars/emma.jpg' },
+    { name: 'James Wilson', role: 'Member', completedSpeeches: 3, nextMilestone: 'Competent Communicator', avatar: '/avatars/james.jpg' },
   ];
 
   return (
@@ -125,64 +93,58 @@ export default function ProgressionPage() {
         </div>
       </section>
 
-      {/* Pathways */}
+      {/* Speech Progress */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Your Learning Path</h2>
-          
-          <div className="space-y-12">
-            {pathways.map((pathway, index) => (
-              <motion.div 
-                key={pathway.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-50 rounded-xl p-6 shadow-sm"
-              >
-                <div className="flex items-center mb-6">
-                  <div className="p-3 bg-[#8B0000] bg-opacity-10 rounded-lg mr-4">
-                    <GraduationCap className="w-6 h-6 text-[#8B0000]" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">{pathway.title}</h3>
-                    <p className="text-gray-600">{pathway.description}</p>
-                  </div>
+          <div className="max-w-4xl mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gray-50 rounded-xl p-6 shadow-sm"
+            >
+              <div className="flex items-center mb-6">
+                <div className="p-3 bg-[#8B0000] bg-opacity-10 rounded-lg mr-4">
+                  <Mic className="w-6 h-6 text-[#8B0000]" />
                 </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">{speechProgress.title}</h3>
+                  <p className="text-gray-600">{speechProgress.description}</p>
+                </div>
+              </div>
 
-                <div className="space-y-4">
-                  {pathway.levels.map((level, levelIndex) => (
-                    <div 
-                      key={levelIndex}
-                      className={`border-l-4 ${level.completed ? 'border-green-500' : 'border-gray-200'} pl-4 py-2`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <h4 className={`font-medium ${level.completed ? 'text-green-700' : 'text-gray-700'}`}>
-                          {level.name}
-                        </h4>
-                        {level.completed && (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            Completed
-                          </span>
-                        )}
-                      </div>
-                      
-                      <ul className="mt-2 space-y-1">
-                        {level.requirements.map((req, reqIndex) => (
-                          <li key={reqIndex} className="flex items-start">
-                            <span className="mr-2">
-                              {level.completed ? '✓' : '•'}
-                            </span>
-                            <span className={`text-sm ${level.completed ? 'text-gray-500' : 'text-gray-600'}`}>
-                              {req}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+              <div className="space-y-4">
+                {speechProgress.levels.map((level, levelIndex) => (
+                  <div 
+                    key={levelIndex}
+                    className={`border-l-4 ${level.completed ? 'border-green-500' : 'border-gray-200'} pl-4 py-2`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <h4 className={`font-medium ${level.completed ? 'text-green-700' : 'text-gray-700'}`}>
+                        {level.name}
+                      </h4>
+                      {level.completed && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Completed
+                        </span>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                    
+                    <ul className="mt-2 space-y-1">
+                      {level.requirements.map((req, reqIndex) => (
+                        <li key={reqIndex} className="flex items-start">
+                          <span className="mr-2">
+                            {level.completed ? '✓' : '•'}
+                          </span>
+                          <span className={`text-sm ${level.completed ? 'text-gray-500' : 'text-gray-600'}`}>
+                            {req}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>

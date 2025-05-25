@@ -146,6 +146,7 @@ const GalleryImageCard = ({
 };
 
 export default function GalleryPage() {
+  const controls = useAnimation();
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [filter, setFilter] = useState<GalleryCategory | 'all'>('all');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -153,7 +154,6 @@ export default function GalleryPage() {
   const [visibleCount, setVisibleCount] = useState(12);
   const [isShareSupported, setIsShareSupported] = useState(false);
   const { toast } = useToast();
-  const controls = useAnimation();
   
   // Check if Web Share API is supported
   useEffect(() => {

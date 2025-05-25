@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import dynamic from 'next/dynamic';
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, MapPin, ArrowRight, CalendarPlus, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+// Dynamic import for client-side only components
+const ClientOnlyTabs = dynamic(
+  () => import('@/components/ui/tabs').then(mod => ({
+    default: ({ children, ...props }: any) => (
+      <Tabs {...props}>
+        <Suspense fallback={<div>Loading...</div>}>
+          {children}
+        </Suspense>
+      </Tabs>
+    )
+  })),
+  { ssr: false }
+);
 
 // Fallback images for events
 const FALLBACK_IMAGES = [
@@ -243,6 +258,14 @@ export default function EventsPage() {
     window.history.pushState(null, '', value === 'past' ? '#past-events' : '#');
   };
 
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-pulse text-lg">Loading events...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
@@ -281,7 +304,7 @@ export default function EventsPage() {
       {/* Events Section */}
       <section id="upcoming-events" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <Tabs 
+          <ClientOnlyTabs 
             value={activeTab} 
             onValueChange={handleTabChange}
             className="w-full"
@@ -359,7 +382,7 @@ export default function EventsPage() {
                 ))}
               </div>
             </TabsContent>
-          </Tabs>
+          </ClientOnlyTabs>
           
           {/* CTA Section */}
           <motion.div 

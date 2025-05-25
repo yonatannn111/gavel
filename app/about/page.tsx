@@ -70,9 +70,9 @@ const staggerContainer: AnimationVariants = {
 // Data
 const executiveCommittee: CommitteeMember[] = [
   {
-    name: "Nigest Kidane",
+    name: "Nigist Kidane",
     role: "President",
-    image: "/members/president.jpeg"
+    image: "/members/president.jpg"
   },
   {
     name: "Selam Meseret",
@@ -87,7 +87,7 @@ const executiveCommittee: CommitteeMember[] = [
   {
     name: "Tewodros Adane",
     role: "Vice President Membership",
-    image: "/members/membership.jpeg"
+    image: "/members/membership.jpg"
   },
   {
     name: "Atnatewos Hailealem",
@@ -100,7 +100,7 @@ const executiveCommittee: CommitteeMember[] = [
     image: "/members/Treasurer.jpg"
   },
   {
-    name: "Kalid Ahmed",
+    name: "Khalid Ahmed",
     role: "Sergeant at Arms",
     image: "/members/sergent.jpeg"
   }
@@ -147,7 +147,7 @@ const AboutPage = (): JSX.Element => {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 z-10"></div>
           <Image 
-            src="/about-hero.jpg" 
+            src="/information/about-hero.jpg" 
             alt="SMU Gavel Club Members"
             fill
             className="object-cover"
@@ -168,7 +168,7 @@ const AboutPage = (): JSX.Element => {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Mic className="h-5 w-5 text-yellow-300" />
-            <span className="text-sm font-medium">Since 2010</span>
+            <span className="text-sm font-medium">Since 2023</span>
           </motion.div>
           
           <motion.h1 
@@ -231,7 +231,7 @@ const AboutPage = (): JSX.Element => {
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 }}
                 >
-                    Founded in 2010, the SMU Gavel Club began as a small group of passionate students dedicated to mastering the art of public speaking. What started as a modest gathering has flourished into one of the most vibrant and respected clubs on campus.
+                    Founded in 2023, the SMU Gavel Club began as a small group of passionate students dedicated to mastering the art of public speaking. What started as a modest gathering has flourished into one of the most vibrant and respected clubs on campus.
                 </motion.p>
                 <motion.p 
                   className="text-lg"
@@ -253,7 +253,7 @@ const AboutPage = (): JSX.Element => {
               transition={{ duration: 0.5 }}
             >
               <Image 
-                src="/history.jpg" 
+                src="/information/history.jpg" 
                 alt="SMU Gavel Club History"
                 fill
                 className="object-cover"

@@ -1,437 +1,566 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Video, BookOpen, Download, ExternalLink, Search } from 'lucide-react';
-import { useState } from 'react';
-import { fadeInUpVariant, staggerContainer } from '../AnimatedContent';
+import { 
+  FileText as FileTextIcon,
+  BookOpen, 
+  Search, 
+  Mic, 
+  Users, 
+  CheckCircle,
+  PlayCircle,
+  Trophy,
+  Lightbulb,
+  FileCheck,
+  File,
+  X,
+  ChevronDown,
+  ArrowRight,
+  Award,
+  User as UserIcon,
+  Clock,
+  Calendar
+} from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
-type Resource = {
+type ResourceType = 'pdf' | 'video' | 'article' | 'template' | 'guide' | 'worksheet';
+type ResourceCategory = 'beginner' | 'speeches' | 'evaluation' | 'leadership' | 'contests' | 'hybrid' | 'tools';
+type ResourceLevel = 'beginner' | 'intermediate' | 'advanced';
+
+interface Resource {
   id: string;
   title: string;
   description: string;
-  type: 'pdf' | 'video' | 'article' | 'template';
-  category: 'beginner' | 'intermediate' | 'advanced' | 'leadership' | 'judging';
+  type: ResourceType;
+  category: ResourceCategory;
   url: string;
   thumbnail?: string;
   duration?: string;
   pages?: number;
   author: string;
   date: string;
+  featured?: boolean;
+  level?: ResourceLevel;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  icon?: React.ReactNode;
+}
+
+interface ResourceTypeFilter {
+  id: ResourceType | 'all';
+  name: string;
+  icon?: React.ReactNode;
+}
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+};
+
+const stagger = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+// Categories for filtering
+const categories: Category[] = [
+  { id: 'all', name: 'All Categories' },
+  { id: 'beginner', name: 'Getting Started', icon: <Lightbulb className="w-4 h-4 mr-2" /> },
+  { id: 'speeches', name: 'Speech Crafting', icon: <Mic className="w-4 h-4 mr-2" /> },
+  { id: 'evaluation', name: 'Evaluations', icon: <CheckCircle className="w-4 h-4 mr-2" /> },
+  { id: 'leadership', name: 'Leadership', icon: <Award className="w-4 h-4 mr-2" /> },
+  { id: 'contests', name: 'Contests', icon: <Trophy className="w-4 h-4 mr-2" /> },
+  { id: 'hybrid', name: 'Hybrid Meetings', icon: <Users className="w-4 h-4 mr-2" /> },
+  { id: 'tools', name: 'Tools & Templates', icon: <File className="w-4 h-4 mr-2" /> },
+];
+
+// Resource types for filtering
+const resourceTypes: ResourceTypeFilter[] = [
+  { id: 'all', name: 'All Types' },
+  { id: 'pdf', name: 'PDFs', icon: <FileTextIcon className="w-4 h-4 mr-2" /> },
+  { id: 'video', name: 'Videos', icon: <PlayCircle className="w-4 h-4 mr-2" /> },
+  { id: 'article', name: 'Articles', icon: <FileTextIcon className="w-4 h-4 mr-2" /> },
+  { id: 'template', name: 'Templates', icon: <FileCheck className="w-4 h-4 mr-2" /> },
+  { id: 'guide', name: 'Guides', icon: <BookOpen className="w-4 h-4 mr-2" /> },
+  { id: 'worksheet', name: 'Worksheets', icon: <File className="w-4 h-4 mr-2" /> },
+];
+
+// Sample resources data
+const resources: Resource[] = [
+  {
+    id: '1',
+    title: 'The Art of Public Speaking',
+    description: 'A comprehensive guide to mastering public speaking skills for beginners.',
+    type: 'pdf',
+    category: 'beginner',
+    url: '#',
+    author: 'John Doe',
+    date: '2023-01-15',
+    pages: 24,
+    featured: true
+  },
+  {
+    id: '2',
+    title: 'Speech Structure 101',
+    description: 'Learn how to structure your speech for maximum impact and engagement.',
+    type: 'video',
+    category: 'speeches',
+    url: '#',
+    author: 'Jane Smith',
+    date: '2023-02-20',
+    duration: '15:30',
+    featured: true
+  },
+  {
+    id: '3',
+    title: 'Effective Evaluation Techniques',
+    description: 'Master the art of giving constructive feedback to fellow Toastmasters.',
+    type: 'article',
+    category: 'evaluation',
+    url: '#',
+    author: 'Robert Johnson',
+    date: '2023-03-10',
+    level: 'intermediate'
+  },
+  {
+    id: '4',
+    title: 'Leadership in Action',
+    description: 'Develop your leadership skills through practical exercises and real-world examples.',
+    type: 'guide',
+    category: 'leadership',
+    url: '#',
+    author: 'Emily Chen',
+    date: '2023-04-05',
+    pages: 18,
+    level: 'advanced'
+  },
+  {
+    id: '5',
+    title: 'Contest Preparation Guide',
+    description: 'Everything you need to know to prepare for and excel in Toastmasters speech contests.',
+    type: 'pdf',
+    category: 'contests',
+    url: '#',
+    author: 'Michael Brown',
+    date: '2023-05-15',
+    pages: 32,
+    featured: true
+  },
+  {
+    id: '6',
+    title: 'Hybrid Meeting Best Practices',
+    description: 'Tips and strategies for running effective hybrid Toastmasters meetings.',
+    type: 'article',
+    category: 'hybrid',
+    url: '#',
+    author: 'Sarah Wilson',
+    date: '2023-06-20',
+    level: 'beginner'
+  },
+  {
+    id: '7',
+    title: 'Meeting Agenda Template',
+    description: 'A customizable template for planning and organizing your Toastmasters meetings.',
+    type: 'template',
+    category: 'tools',
+    url: '#',
+    author: 'David Kim',
+    date: '2023-07-10',
+    featured: true
+  },
+  {
+    id: '8',
+    title: 'Speech Evaluation Worksheet',
+    description: 'A structured worksheet for providing detailed and constructive speech evaluations.',
+    type: 'worksheet',
+    category: 'evaluation',
+    url: '#',
+    author: 'Lisa Wong',
+    date: '2023-08-05',
+    level: 'intermediate'
+  }
+];
+
+// Component to display a single resource card
+const ResourceCard = ({ resource }: { resource: Resource }) => {
+  return (
+    <motion.div
+      variants={fadeInUp}
+      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full"
+    >
+      {resource.thumbnail ? (
+        <div className="h-48 bg-gray-100 relative">
+          <Image
+            src={resource.thumbnail}
+            alt={resource.title}
+            fill
+            className="object-cover"
+          />
+          {resource.type === 'video' && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <PlayCircle className="w-12 h-12 text-white" />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="h-48 bg-gradient-to-br from-[#8B0000] to-[#B91C1C] flex items-center justify-center text-white">
+          {getIconByType(resource.type, 'w-12 h-12')}
+        </div>
+      )}
+      
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="flex items-center mb-2">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#8B0000]/10 text-[#8B0000] mr-2">
+            {resourceTypes.find(t => t.id === resource.type)?.name}
+          </span>
+          {resource.level && (
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              {resource.level.charAt(0).toUpperCase() + resource.level.slice(1)}
+            </span>
+          )}
+        </div>
+        
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+          {resource.title}
+        </h3>
+        
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+          {resource.description}
+        </p>
+        
+        <div className="mt-auto pt-4 border-t border-gray-100">
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <div className="flex items-center">
+              <UserIcon className="w-3 h-3 mr-1" />
+              <span>{resource.author}</span>
+            </div>
+            <div className="flex items-center">
+              <Calendar className="w-3 h-3 mr-1" />
+              <span>{new Date(resource.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+            </div>
+          </div>
+          
+          <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+            <div className="flex items-center text-xs text-gray-500">
+              {resource.type === 'video' ? (
+                <Clock className="w-3 h-3 mr-1" />
+              ) : resource.pages ? (
+                <File className="w-3 h-3 mr-1" />
+              ) : null}
+              <span>
+                {resource.type === 'video' 
+                  ? resource.duration 
+                  : resource.pages 
+                    ? `${resource.pages} pages` 
+                    : ''}
+              </span>
+            </div>
+            
+            <a 
+              href={resource.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-sm font-medium text-[#8B0000] hover:text-[#B91C1C] transition-colors"
+            >
+              View Resource
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Helper function to get icon by resource type
+const getIconByType = (type: string, className = 'w-6 h-6') => {
+  switch (type) {
+    case 'pdf':
+      return <FileTextIcon className={className} />;
+    case 'video':
+      return <PlayCircle className={className} />;
+    case 'article':
+      return <FileTextIcon className={className} />;
+    case 'template':
+      return <FileCheck className={className} />;
+    case 'guide':
+      return <BookOpen className={className} />;
+    case 'worksheet':
+      return <File className={className} />;
+    default:
+      return <File className={className} />;
+  }
 };
 
 export default function ResourcesPage() {
+  // State for search and filters
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [expandedResource, setExpandedResource] = useState<string | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [activeType, setActiveType] = useState<ResourceType | 'all'>('all');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isTypeOpen, setIsTypeOpen] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const typeRef = useRef<HTMLDivElement>(null);
 
-  const resources: Resource[] = [
-    {
-      id: 'ice-breaker-guide',
-      title: 'Ice Breaker Speech Guide',
-      description: 'A comprehensive guide to delivering your first Ice Breaker speech with confidence',
-      type: 'pdf',
-      category: 'beginner',
-      url: '/resources/ice-breaker-guide.pdf',
-      pages: 12,
-      author: 'SMU Gavel Club',
-      date: '2024-01-15'
-    },
-    {
-      id: 'evaluation-techniques',
-      title: 'Effective Evaluation Techniques',
-      description: 'Learn how to provide constructive feedback that helps speakers grow',
-      type: 'video',
-      category: 'intermediate',
-      url: 'https://youtube.com/watch?v=example1',
-      duration: '15:30',
-      author: 'Jane Smith, DTM',
-      date: '2024-02-20'
-    },
-    {
-      id: 'pathways-overview',
-      title: 'Pathways Learning Experience',
-      description: 'Overview of the Toastmasters Pathways learning experience',
-      type: 'article',
-      category: 'beginner',
-      url: 'https://www.toastmasters.org/pathways-overview',
-      author: 'Toastmasters International',
-      date: '2023-11-10'
-    },
-    {
-      id: 'speech-structure',
-      title: 'Speech Structure Templates',
-      description: 'Downloadable templates for different speech structures',
-      type: 'template',
-      category: 'intermediate',
-      url: '/resources/speech-templates.zip',
-      author: 'SMU Gavel Club',
-      date: '2024-03-05'
-    },
-    {
-      id: 'advanced-storytelling',
-      title: 'Advanced Storytelling Techniques',
-      description: 'Master the art of storytelling in your speeches',
-      type: 'video',
-      category: 'advanced',
-      url: 'https://youtube.com/watch?v=example2',
-      duration: '22:15',
-      author: 'Michael Chen',
-      date: '2024-01-30'
-    },
-    {
-      id: 'meeting-roles',
-      title: 'Meeting Roles Handbook',
-      description: 'Detailed guide to all meeting roles and responsibilities',
-      type: 'pdf',
-      category: 'beginner',
-      url: '/resources/meeting-roles.pdf',
-      pages: 18,
-      author: 'SMU Gavel Club',
-      date: '2023-12-15'
-    },
-    {
-      id: 'mentorship-guide',
-      title: 'Mentorship Program Guide',
-      description: 'How to be an effective mentor or mentee in the Gavel Club',
-      type: 'pdf',
-      category: 'leadership',
-      url: '/resources/mentorship-guide.pdf',
-      pages: 24,
-      author: 'SMU Gavel Club',
-      date: '2024-02-10'
-    },
-    {
-      id: 'contest-judging',
-      title: 'Contest Judging Criteria',
-      description: 'Official judging criteria for speech contests',
-      type: 'pdf',
-      category: 'judging',
-      url: '/resources/judging-criteria.pdf',
-      pages: 8,
-      author: 'Toastmasters International',
-      date: '2023-10-05'
-    }
-  ];
-
-  const categories = [
-    { id: 'all', name: 'All Resources' },
-    { id: 'beginner', name: 'Beginner' },
-    { id: 'intermediate', name: 'Intermediate' },
-    { id: 'advanced', name: 'Advanced' },
-    { id: 'leadership', name: 'Leadership' },
-    { id: 'judging', name: 'Judging' }
-  ];
-
-  const resourceTypes = {
-    pdf: { icon: <FileText className="w-5 h-5" />, color: 'bg-red-100 text-red-600' },
-    video: { icon: <Video className="w-5 h-5" />, color: 'bg-blue-100 text-blue-600' },
-    article: { icon: <BookOpen className="w-5 h-5" />, color: 'bg-green-100 text-green-600' },
-    template: { icon: <Download className="w-5 h-5" />, color: 'bg-purple-100 text-purple-600' }
-  };
-
-  const toggleResource = (id: string) => {
-    setExpandedResource(expandedResource === id ? null : id);
-  };
-
+  // Filter resources based on search and active filters
   const filteredResources = resources.filter(resource => {
-    const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         resource.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = activeFilter === 'all' || resource.category === activeFilter;
-    return matchesSearch && matchesFilter;
+    const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                       (resource.description && resource.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory = activeFilter === 'all' || resource.category === activeFilter;
+    const matchesType = activeType === 'all' || resource.type === activeType;
+    return matchesSearch && matchesCategory && matchesType;
   });
+
+  // Handle click outside for dropdowns
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setIsFilterOpen(false);
+      }
+      if (typeRef.current && !typeRef.current.contains(event.target as Node)) {
+        setIsTypeOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <motion.div 
-        initial="hidden"
-        animate="show"
-        variants={staggerContainer}
-        className="w-full"
-      >
-        {/* Hero Section */}
-        <motion.section 
-          className="bg-[#8B0000] text-white py-20"
-          custom={0}
-          variants={fadeInUpVariant}
-          initial="hidden"
-          animate="visible"
-        >
-          <div className="container mx-auto px-4 text-center">
-            <motion.h1 
-              className="text-4xl md:text-5xl font-bold mb-6"
-              variants={fadeInUpVariant}
-              custom={0}
-            >
-              Resource Hub
-            </motion.h1>
-            <motion.p 
-              className="text-xl max-w-3xl mx-auto"
-              variants={fadeInUpVariant}
-              custom={1}
-            >
-              Essential materials to support your public speaking and leadership journey
-            </motion.p>
-          </div>
-        </motion.section>
-
-      {/* Search and Filter */}
-      <motion.section 
-        className="py-12 bg-white"
-        custom={1}
-        variants={fadeInUpVariant}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            {/* Search Bar */}
-            <motion.div 
-              className="relative mb-8"
-              custom={0}
-              variants={fadeInUpVariant}
-            >
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
+      {/* Hero Section */}
+      <section className="relative bg-[#8B0000] text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <motion.h1 
+            className="text-4xl md:text-5xl font-bold mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Toastmasters Resources
+          </motion.h1>
+          <motion.p 
+            className="text-xl text-white/90 max-w-3xl mx-auto mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Enhance your public speaking and leadership skills with our curated collection of resources.
+          </motion.p>
+          
+          {/* Search Bar */}
+          <motion.div 
+            className="max-w-2xl mx-auto relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-4 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
                 placeholder="Search resources..."
+                className="w-full pl-12 pr-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white/20 bg-white/10 text-white placeholder-white/70"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </motion.div>
-
-            {/* Category Filters */}
-            <motion.div 
-              className="flex flex-wrap justify-center gap-2 mb-8"
-              custom={1}
-              variants={fadeInUpVariant}
-            >
-              {categories.map((category, index) => (
-                <motion.button
-                  key={category.id}
-                  onClick={() => setActiveFilter(category.id as any)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    activeFilter === category.id
-                      ? 'bg-[#8B0000] text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                  custom={index}
-                  variants={fadeInUpVariant}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
                 >
-                  {category.name}
-                </motion.button>
-              ))}
-            </motion.div>
+                  <X className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <h2 className="text-2xl font-bold text-gray-900">Featured Resources</h2>
+          
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            {/* Category Filter */}
+            <div className="relative" ref={filterRef}>
+              <button
+                onClick={() => {
+                  setIsFilterOpen(!isFilterOpen);
+                  setIsTypeOpen(false);
+                }}
+                className="flex items-center justify-between w-full sm:w-48 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B0000]"
+              >
+                <span className="flex items-center">
+                  {categories.find(cat => cat.id === activeFilter)?.icon}
+                  {categories.find(cat => cat.id === activeFilter)?.name || 'All Categories'}
+                </span>
+                <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${isFilterOpen ? 'transform rotate-180' : ''}`} />
+              </button>
+              
+              <AnimatePresence>
+                {isFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute z-10 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden"
+                  >
+                    <div className="py-1">
+                      {categories.map((category) => (
+                        <button
+                          key={category.id}
+                          onClick={() => {
+                            setActiveFilter(category.id);
+                            setIsFilterOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm flex items-center ${
+                            activeFilter === category.id
+                              ? 'bg-[#8B0000]/10 text-[#8B0000]'
+                              : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          {category.icon}
+                          {category.name}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
+            {/* Type Filter */}
+            <div className="relative" ref={typeRef}>
+              <button
+                onClick={() => {
+                  setIsTypeOpen(!isTypeOpen);
+                  setIsFilterOpen(false);
+                }}
+                className="flex items-center justify-between w-full sm:w-48 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B0000]"
+              >
+                <span className="flex items-center">
+                  {resourceTypes.find(type => type.id === activeType)?.icon}
+                  {resourceTypes.find(type => type.id === activeType)?.name || 'All Types'}
+                </span>
+                <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${isTypeOpen ? 'transform rotate-180' : ''}`} />
+              </button>
+              
+              <AnimatePresence>
+                {isTypeOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute z-10 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden"
+                  >
+                    <div className="py-1">
+                      {resourceTypes.map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => {
+                            setActiveType(type.id as ResourceType | 'all');
+                            setIsTypeOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm flex items-center ${
+                            activeType === type.id
+                              ? 'bg-[#8B0000]/10 text-[#8B0000]'
+                              : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          {type.icon}
+                          {type.name}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
-      </motion.section>
-
-      {/* Resources Grid */}
-      <motion.section 
-        className="py-12 bg-gray-50"
-        custom={2}
-        variants={fadeInUpVariant}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="container mx-auto px-4">
-          <AnimatePresence mode="wait">
-            {filteredResources.length === 0 ? (
-              <motion.div 
-                className="text-center py-12"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-gray-500 text-lg mb-4">No resources found matching your criteria.</p>
-                <motion.button 
-                  onClick={() => {
-                    setSearchQuery('');
-                    setActiveFilter('all');
-                  }}
-                  className="text-[#8B0000] hover:underline"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+        
+        {/* Active Filters */}
+        {(activeFilter !== 'all' || activeType !== 'all') && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            {activeFilter !== 'all' && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#8B0000]/10 text-[#8B0000]">
+                {categories.find(cat => cat.id === activeFilter)?.name}
+                <button 
+                  onClick={() => setActiveFilter('all')}
+                  className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-[#8B0000]/20"
                 >
-                  Clear filters
-                </motion.button>
-              </motion.div>
-            ) : (
-              <motion.div 
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                variants={{
-                  hidden: { opacity: 0 },
-                  show: {
-                    opacity: 1,
-                    transition: {
-                      staggerChildren: 0.1,
-                      delayChildren: 0.1
-                    }
-                  }
-                }}
-              >
-                {filteredResources.map((resource, index) => (
-                  <motion.div
-                    key={resource.id}
-                    custom={index}
-                    variants={fadeInUpVariant}
-                    className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col h-full"
-                    whileHover={{ 
-                      y: -5, 
-                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' 
-                    }}
-                    initial="hidden"
-                    animate="show"
-                    exit="hidden"
-                    layout
-                  >
-                    <div 
-                      className="p-6 cursor-pointer"
-                      onClick={() => toggleResource(resource.id)}
-                    >
-                      <div className="flex items-center mb-4">
-                        <motion.div 
-                          className={`${resourceTypes[resource.type].color} p-2 rounded-lg mr-3`}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          {resourceTypes[resource.type].icon}
-                        </motion.div>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                          {resource.category.charAt(0).toUpperCase() + resource.category.slice(1)}
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{resource.title}</h3>
-                      <p className="text-gray-600 mb-4">{resource.description}</p>
-                      
-                      <div className="flex items-center text-sm text-gray-500 mt-4">
-                        <span>{resource.author}</span>
-                        <span className="mx-2">•</span>
-                        <span>{new Date(resource.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                        {resource.duration && (
-                          <>
-                            <span className="mx-2">•</span>
-                            <span>{resource.duration}</span>
-                          </>
-                        )}
-                        {resource.pages && (
-                          <>
-                            <span className="mx-2">•</span>
-                            <span>{resource.pages} pages</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Expanded Content */}
-                    <AnimatePresence>
-                      {expandedResource === resource.id && (
-                        <motion.div 
-                          className="border-t border-gray-100 p-6 bg-gray-50"
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <div className="flex flex-wrap gap-3">
-                            <motion.a
-                              href={resource.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#8B0000] hover:bg-[#6B0000] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B0000]"
-                              whileHover={{ scale: 1.03 }}
-                              whileTap={{ scale: 0.98 }}
-                            >
-                              {resource.type === 'video' || resource.type === 'article' ? (
-                                <>
-                                  <ExternalLink className="mr-2 h-4 w-4" />
-                                  View {resource.type}
-                                </>
-                              ) : (
-                                <>
-                                  <Download className="mr-2 h-4 w-4" />
-                                  Download {resource.type}
-                                </>
-                              )}
-                            </motion.a>
-                            
-                            {resource.type === 'video' && (
-                              <motion.button 
-                                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B0000]"
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.98 }}
-                              >
-                                <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                                </svg>
-                                Save for later
-                              </motion.button>
-                            )}
-                          </div>
-                          
-                          {resource.type === 'video' && (
-                            <motion.div 
-                              className="mt-4"
-                              initial={{ opacity: 0, y: -10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.1 }}
-                            >
-                              <p className="text-sm text-gray-500">Video description and key points will appear here...</p>
-                            </motion.div>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-              </motion.div>
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
             )}
-          </AnimatePresence>
-        </div>
-      </motion.section>
-
-      {/* Call to Action */}
-      <motion.section 
-        className="py-16 bg-white"
-        custom={3}
-        variants={fadeInUpVariant}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="container mx-auto px-4 text-center">
-          <motion.h2 
-            className="text-3xl font-bold text-gray-900 mb-6"
-            custom={0}
-            variants={fadeInUpVariant}
+            {activeType !== 'all' && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                {resourceTypes.find(type => type.id === activeType)?.name}
+                <button 
+                  onClick={() => setActiveType('all')}
+                  className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-blue-200"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
+        
+        {/* Resources Grid */}
+        {filteredResources.length > 0 ? (
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
-            Have a resource to share?
-          </motion.h2>
-          <motion.p 
-            className="text-xl text-gray-600 max-w-2xl mx-auto mb-8"
-            custom={1}
-            variants={fadeInUpVariant}
-          >
-            We're always looking for valuable resources to add to our collection. Share your favorites with the community!
-          </motion.p>
-          <motion.button 
-            className="bg-[#8B0000] hover:bg-[#6B0000] text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-            custom={2}
-            variants={fadeInUpVariant}
-            whileHover={{ 
-              y: -3,
-              boxShadow: '0 10px 25px -5px rgba(139, 0, 0, 0.3)'
-            }}
-          >
-            Submit a Resource
-          </motion.button>
-        </div>
-      </motion.section>
-      </motion.div>
+            {filteredResources.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))}
+          </motion.div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
+              <Search className="h-6 w-6 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-1">No resources found</h3>
+            <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setActiveFilter('all');
+                setActiveType('all');
+              }}
+              className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#8B0000] hover:bg-[#6B0000] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B0000]"
+            >
+              Clear all filters
+            </button>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
