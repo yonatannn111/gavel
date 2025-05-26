@@ -61,41 +61,22 @@ const fadeInUp = {
 
 export function AnimatedContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isFirstMount, setIsFirstMount] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsFirstMount(false);
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Skip animation on first mount to prevent flash of content
-  if (isFirstMount) {
-    return <main className="min-h-[calc(100vh-64px)] pt-16">{children}</main>;
-  }
-
+  
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.main
-        key={pathname}
-        initial="hidden"
-        animate="enter"
-        exit="exit"
-        variants={pageVariants}
-        className="min-h-[calc(100vh-64px)] pt-16 overflow-hidden"
-      >
+    <div className="bg-white">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          animate="enter"
-          exit="exit"
-          className="h-full"
+          key={pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="min-h-screen"
         >
           {children}
         </motion.div>
-      </motion.main>
-    </AnimatePresence>
+      </AnimatePresence>
+    </div>
   );
 }
 

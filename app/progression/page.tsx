@@ -1,18 +1,34 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Trophy, Award, BarChart2, Users as UsersIcon, BookOpen, GraduationCap, Mic } from 'lucide-react';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  X, 
+  Clock, 
+  ArrowRight, 
+  CheckCircle, 
+  Award,
+  FileText, 
+  Briefcase, 
+  Mic, 
+  Trophy,
+  Users as UsersIcon 
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+// Type definitions
+type SpeechLevel = {
+  name: string;
+  description: string;
+  time: string;
+  objectives: string[];
+};
 
 type SpeechProgress = {
   id: string;
   title: string;
   description: string;
-  levels: {
-    name: string;
-    requirements: string[];
-    completed: boolean;
-  }[];
+  levels: SpeechLevel[];
 };
 
 type MemberProgress = {
@@ -24,266 +40,329 @@ type MemberProgress = {
 };
 
 export default function ProgressionPage() {
+  const [selectedSpeech, setSelectedSpeech] = useState<SpeechLevel | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openSpeechModal = (speech: SpeechLevel) => {
+    setSelectedSpeech(speech);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeSpeechModal = () => {
+    setIsModalOpen(false);
+    setSelectedSpeech(null);
+    document.body.style.overflow = 'auto';
+  };
+
   const speechProgress: SpeechProgress = {
     id: 'cc',
-    title: 'Competent Communicator (CC)',
-    description: 'Complete 10 speeches to achieve the Competent Communicator award',
-    levels: Array.from({ length: 10 }, (_, i) => ({
-      name: `Speech ${i + 1}`,
-      requirements: [
-        i === 0 ? 'Ice Breaker (4-6 min)' : `Project ${i + 1} (5-7 min)`,
-        'Speech Objectives',
-        'Evaluation'
-      ],
-      completed: i < 3 // First 3 speeches completed
-    }))
+    title: 'Competent Communicator (CC) Program',
+    description: 'A comprehensive 10-speech program designed to develop essential public speaking skills',
+    levels: [
+      {
+        name: '1. The Ice Breaker',
+        description: 'Begin your speaking journey by introducing yourself to the club',
+        time: '4-6 minutes',
+        objectives: [
+          'Overcome nervousness',
+          'Discover speaking strengths',
+          'Receive constructive feedback'
+        ]
+      },
+      {
+        name: '2. Organize Your Speech',
+        description: 'Learn to structure your message for maximum impact',
+        time: '5-7 minutes',
+        objectives: [
+          'Create a clear opening, body, and conclusion',
+          'Use transitions effectively',
+          'Support your main points'
+        ]
+      },
+      {
+        name: '3. Get to the Point',
+        description: 'Focus your message and stay on topic',
+        time: '5-7 minutes',
+        objectives: [
+          'Develop a clear purpose',
+          'Organize content logically',
+          'Project confidence'
+        ]
+      },
+      {
+        name: '4. How to Say It',
+        description: 'Master the art of word choice and language',
+        time: '5-7 minutes',
+        objectives: [
+          'Use precise language',
+          'Employ rhetorical devices',
+          'Eliminate jargon'
+        ]
+      },
+      {
+        name: '5. Your Body Speaks',
+        description: 'Enhance your message with effective body language',
+        time: '5-7 minutes',
+        objectives: [
+          'Use gestures and facial expressions',
+          'Maintain eye contact',
+          'Develop a confident stance'
+        ]
+      },
+      {
+        name: '6. Vocal Variety',
+        description: 'Use your voice to engage and persuade',
+        time: '5-7 minutes',
+        objectives: [
+          'Vary pitch, pace, and volume',
+          'Use pauses effectively',
+          'Convey emotion through voice'
+        ]
+      },
+      {
+        name: '7. Research Your Topic',
+        description: 'Support your message with solid research',
+        time: '5-7 minutes',
+        objectives: [
+          'Gather information from multiple sources',
+          'Support points with facts and examples',
+          'Cite sources appropriately'
+        ]
+      },
+      {
+        name: '8. Get Comfortable with Visual Aids',
+        description: 'Enhance your presentation with effective visuals',
+        time: '5-7 minutes',
+        objectives: [
+          'Select appropriate visual aids',
+          'Use technology effectively',
+          'Ensure visibility and clarity'
+        ]
+      },
+      {
+        name: '9. Persuade with Power',
+        description: 'Learn to influence and motivate your audience',
+        time: '5-7 minutes',
+        objectives: [
+          'Appeal to audience interests',
+          'Use logic and emotion',
+          'Deliver a compelling call to action'
+        ]
+      },
+      {
+        name: '10. Inspire Your Audience',
+        description: 'Deliver a speech that motivates and uplifts',
+        time: '8-10 minutes',
+        objectives: [
+          'Appeal to noble motives',
+          'Use stories and anecdotes',
+          'Leave a lasting impact'
+        ]
+      }
+    ]
   };
 
   const leaderboard: MemberProgress[] = [
-    { name: 'Yohanes Jember', role: 'Member', completedSpeeches: 15, nextMilestone: 'Advanced Communicator Bronze', avatar: '/avatars/alex.jpg' },
-    { name: 'Rediet Asfaw', role: 'Member', completedSpeeches: 10, nextMilestone: 'Competent Communicator', avatar: '/avatars/sarah.jpg' },
-    { name: 'Khalid Ahmed', role: 'Sergeant at Arms', completedSpeeches: 8, nextMilestone: 'Competent Communicator', avatar: '/avatars/michael.jpg' },
-    { name: 'Emma Davis', role: 'Secretary', completedSpeeches: 5, nextMilestone: 'Competent Communicator', avatar: '/avatars/emma.jpg' },
-    { name: 'James Wilson', role: 'Member', completedSpeeches: 3, nextMilestone: 'Competent Communicator', avatar: '/avatars/james.jpg' },
+    { name: 'Yohanes Jember', role: 'Member', completedSpeeches: 10, nextMilestone: 'Competent Communicator', avatar: '/avatars/alex.jpg' },
+    { name: 'Rediet Asfaw', role: 'Member', completedSpeeches: 7, nextMilestone: 'Competent Communicator', avatar: '/avatars/sarah.jpg' },
+    { name: 'Khalid Ahmed', role: 'Sergeant at Arms', completedSpeeches: 5, nextMilestone: 'Competent Communicator', avatar: '/avatars/michael.jpg' },
+    { name: 'Emma Davis', role: 'Secretary', completedSpeeches: 3, nextMilestone: 'Competent Communicator', avatar: '/avatars/emma.jpg' },
+    { name: 'James Wilson', role: 'Member', completedSpeeches: 2, nextMilestone: 'Competent Communicator', avatar: '/avatars/james.jpg' },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-[#8B0000] text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Member Progression</h1>
-          <p className="text-xl max-w-3xl mx-auto">Track your growth and achievements in the SMU Gavel Club journey</p>
-        </div>
-      </section>
-
-      {/* Progress Overview */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="flex items-center mb-4">
-                <Trophy className="w-8 h-8 text-[#8B0000] mr-3" />
-                <h3 className="text-xl font-semibold">Current Level</h3>
-              </div>
-              <p className="text-3xl font-bold text-gray-800">Pathways Level 2</p>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
-                <div className="bg-[#8B0000] h-2.5 rounded-full" style={{ width: '65%' }}></div>
-              </div>
-              <p className="text-sm text-gray-500 mt-2">65% to next level</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="flex items-center mb-4">
-                <Award className="w-8 h-8 text-[#8B0000] mr-3" />
-                <h3 className="text-xl font-semibold">Speeches Completed</h3>
-              </div>
-              <p className="text-3xl font-bold text-gray-800">8/10</p>
-              <p className="text-sm text-gray-500 mt-2">2 more to achieve CC</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="flex items-center mb-4">
-                <BarChart2 className="w-8 h-8 text-[#8B0000] mr-3" />
-                <h3 className="text-xl font-semibold">Meeting Participation</h3>
-              </div>
-              <p className="text-3xl font-bold text-gray-800">85%</p>
-              <p className="text-sm text-gray-500 mt-2">Last 10 meetings</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Speech Progress */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-gray-50 rounded-xl p-6 shadow-sm"
-            >
-              <div className="flex items-center mb-6">
-                <div className="p-3 bg-[#8B0000] bg-opacity-10 rounded-lg mr-4">
-                  <Mic className="w-6 h-6 text-[#8B0000]" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">{speechProgress.title}</h3>
-                  <p className="text-gray-600">{speechProgress.description}</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {speechProgress.levels.map((level, levelIndex) => (
-                  <div 
-                    key={levelIndex}
-                    className={`border-l-4 ${level.completed ? 'border-green-500' : 'border-gray-200'} pl-4 py-2`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <h4 className={`font-medium ${level.completed ? 'text-green-700' : 'text-gray-700'}`}>
-                        {level.name}
-                      </h4>
-                      {level.completed && (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Completed
-                        </span>
-                      )}
-                    </div>
-                    
-                    <ul className="mt-2 space-y-1">
-                      {level.requirements.map((req, reqIndex) => (
-                        <li key={reqIndex} className="flex items-start">
-                          <span className="mr-2">
-                            {level.completed ? '✓' : '•'}
-                          </span>
-                          <span className={`text-sm ${level.completed ? 'text-gray-500' : 'text-gray-600'}`}>
-                            {req}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Leaderboard */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Member Leaderboard</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Track your progress and see how you compare with other members
+      <section className="bg-gradient-to-r from-[#8B0000] to-[#660000] text-white py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Your Speaking Journey</h1>
+            <p className="text-lg md:text-xl opacity-90">
+              Progress through structured speech levels and track your growth as a confident communicator
             </p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="grid grid-cols-12 bg-gray-50 px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider">
-              <div className="col-span-1">#</div>
-              <div className="col-span-4">Member</div>
-              <div className="col-span-2">Role</div>
-              <div className="col-span-2">Level</div>
-              <div className="col-span-2">Speeches</div>
-              <div className="col-span-1">Actions</div>
-            </div>
-
-            <div className="divide-y divide-gray-200">
-              {leaderboard.map((member, index) => (
-                <div key={index} className="grid grid-cols-12 items-center px-6 py-4 hover:bg-gray-50">
-                  <div className="col-span-1 text-gray-500 font-medium">{index + 1}</div>
-                  <div className="col-span-4 flex items-center">
-                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-medium">
-                      {member.avatar ? (
-                        <img className="h-10 w-10 rounded-full" src={member.avatar} alt={member.name} />
-                      ) : (
-                        member.name.split(' ').map(n => n[0]).join('').toUpperCase()
-                      )}
-                    </div>
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{member.name}</div>
-                      <div className="text-sm text-gray-500">Next: {member.nextMilestone}</div>
-                    </div>
-                  </div>
-                  <div className="col-span-2 text-sm text-gray-500">{member.role}</div>
-                  <div className="col-span-2">
-                    <span className="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      {member.level}
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <div className="flex items-center">
-                      <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
-                        <div 
-                          className="bg-[#8B0000] h-2.5 rounded-full" 
-                          style={{ width: `${(member.completedSpeeches / 20) * 100}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-sm font-medium text-gray-700">{member.completedSpeeches}</span>
-                    </div>
-                  </div>
-                  <div className="col-span-1 flex justify-end">
-                    <button className="text-[#8B0000] hover:text-[#6B0000]">
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Resources Section */}
+      {/* Program Overview */}
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Learning Resources</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Essential resources to help you on your public speaking journey
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">The Competent Communicator Journey</h2>
+            <div className="w-16 h-1 bg-[#8B0000] mx-auto my-4"></div>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Master public speaking through Toastmasters' structured 10-speech program, building from fundamentals to advanced techniques.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Beginner\'s Guide',
-                description: 'Get started with public speaking and Toastmasters basics',
-                icon: <BookOpen className="w-8 h-8 text-[#8B0000]" />,
-                items: [
-                  'Ice Breaker Tips',
-                  'Speech Structure 101',
-                  'Overcoming Stage Fright',
-                  'Evaluation Basics'
-                ]
-              },
-              {
-                title: 'Advanced Techniques',
-                description: 'Elevate your speaking skills to the next level',
-                icon: <BarChart2 className="w-8 h-8 text-[#8B0000]" />,
-                items: [
-                  'Storytelling Mastery',
-                  'Vocal Variety',
-                  'Advanced Body Language',
-                  'Persuasive Speaking'
-                ]
-              },
-              {
-                title: 'Leadership Resources',
-                description: 'Develop your leadership skills within the club',
-                icon: <UsersIcon className="w-8 h-8 text-[#8B0000]" />,
-                items: [
-                  'Meeting Roles Guide',
-                  'Mentorship Program',
-                  'Club Leadership',
-                  'Event Planning'
-                ]
-              }
-            ].map((resource, index) => (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            {speechProgress.levels.map((speech, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-50 rounded-xl p-6 hover:shadow-md transition-shadow duration-300"
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                className="relative bg-white rounded-xl border border-gray-100 overflow-hidden group transition-all duration-300 h-full flex flex-col"
+                onClick={() => openSpeechModal(speech)}
+                style={{ cursor: 'pointer' }}
               >
-                <div className="w-12 h-12 bg-[#8B0000] bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
-                  {resource.icon}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#8B0000] to-[#FF6B6B]"></div>
+                <div className="p-6 flex flex-col h-full">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="bg-gradient-to-r from-[#8B0000] to-[#B91C1C] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                      Speech {index + 1}
+                    </div>
+                    <span className="text-xs font-medium text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full flex items-center">
+                      <Clock className="w-3 h-3 mr-1.5 text-[#8B0000]" />
+                      {speech.time}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#8B0000] transition-colors">
+                    {speech.name}
+                  </h3>
+                  <p className="text-gray-600 mb-4 text-sm flex-grow">
+                    {speech.description}
+                  </p>
+                  <div className="mt-auto pt-4 border-t border-gray-100">
+                    <button 
+                      className="w-full group flex items-center justify-between text-sm font-medium text-[#8B0000] hover:text-[#660000] transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openSpeechModal(speech);
+                      }}
+                    >
+                      <span>View details</span>
+                      <div className="flex items-center justify-center w-6 h-6 bg-[#8B0000]/10 rounded-full group-hover:bg-[#8B0000]/20 transition-colors">
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                    </button>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{resource.title}</h3>
-                <p className="text-gray-600 mb-4">{resource.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CC Achievement Section */}
+      <section className="relative py-20 bg-white overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/toastmasters-pattern-light.png')] opacity-5"></div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center justify-center px-5 py-1.5 rounded-full bg-[#8B0000] text-white text-xs font-medium uppercase tracking-wider mb-6"
+            >
+              Achievement Unlocked
+            </motion.div>
+            
+            <motion.h2 
+              className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <span className="text-[#8B0000]">Competent Communicator</span> Benefits
+            </motion.h2>
+            
+            <motion.div 
+              className="w-20 h-1 bg-gradient-to-r from-[#8B0000] to-[#D4AF37] mx-auto my-8 rounded-full"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            />
+            
+            <motion.p 
+              className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Earning your Competent Communicator award brings valuable recognition and opportunities 
+              for personal and professional growth.
+            </motion.p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                title: "Official Recognition",
+                description: "Receive a globally recognized certificate from Toastmasters International",
+                icon: <FileText className="w-6 h-6 text-[#8B0000]" />,
+                features: [
+                  "Globally recognized credential",
+                  "Verifiable digital badge",
+                  "Printable certificate"
+                ]
+              },
+              {
+                title: "Professional Advantages",
+                description: "Enhance your career prospects with this valuable credential",
+                icon: <Briefcase className="w-6 h-6 text-[#8B0000]" />,
+                features: [
+                  "Stand out in job applications",
+                  "Enhance your LinkedIn profile",
+                  "Demonstrate communication skills"
+                ]
+              },
+              {
+                title: "Personal Growth",
+                description: "Develop essential communication and leadership abilities",
+                icon: <Award className="w-6 h-6 text-[#8B0000]" />,
+                features: [
+                  "Increased confidence",
+                  "Improved public speaking",
+                  "Better leadership skills"
+                ]
+              },
+              {
+                title: "Community & Network",
+                description: "Join an exclusive community of communicators",
+                icon: <UsersIcon className="w-6 h-6 text-[#8B0000]" />,
+                features: [
+                  "Global Toastmasters network",
+                  "Local club connections",
+                  "Professional networking"
+                ]
+              }
+            ].map((benefit, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
+                <div className="w-12 h-12 rounded-lg bg-[#8B0000]/10 flex items-center justify-center mb-4">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  {benefit.description}
+                </p>
                 <ul className="space-y-2">
-                  {resource.items.map((item, i) => (
-                    <li key={i} className="flex items-center">
-                      <svg className="w-4 h-4 text-[#8B0000] mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                      <span className="text-gray-700">{item}</span>
+                  {benefit.features.map((feature, i) => (
+                    <li key={i} className="flex items-start">
+                      <CheckCircle className="w-4 h-4 text-[#8B0000] mt-0.5 mr-2 flex-shrink-0" />
+                      <span className="text-gray-700 text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -293,42 +372,161 @@ export default function ProgressionPage() {
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            className="max-w-5xl mx-auto bg-gradient-to-r from-[#8B0000] to-[#6B0000] rounded-2xl shadow-xl overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <div className="p-8 md:p-12 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Start Your Journey?</h2>
-              <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
-                Join SMU Gavel Club today and unlock your full potential as a speaker and leader.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link 
-                  href="/join"
-                  className="bg-white text-[#8B0000] hover:bg-gray-100 px-8 py-3 rounded-full font-medium text-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                >
-                  Join Now
-                </Link>
-                <Link 
-                  href="/about"
-                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded-full font-medium text-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                >
-                  Learn More
-                </Link>
-              </div>
-              <p className="mt-6 text-gray-200 text-sm">
-                No commitment required. Cancel anytime.
-              </p>
+      {/* Leaderboard Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Club Leaderboard</h2>
+            <div className="w-16 h-1 bg-[#8B0000] mx-auto my-4"></div>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              See how your progress compares with other club members and get inspired by their achievements.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="grid grid-cols-12 bg-gray-50 border-b border-gray-100 p-4 font-medium text-gray-500 text-sm">
+              <div className="col-span-1">#</div>
+              <div className="col-span-5">Member</div>
+              <div className="col-span-3 text-center">Role</div>
+              <div className="col-span-3 text-right">Speeches</div>
             </div>
-          </motion.div>
+            {leaderboard.map((member, index) => (
+              <div key={index} className="grid grid-cols-12 items-center p-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                <div className="col-span-1 font-medium text-gray-500">{index + 1}</div>
+                <div className="col-span-5 flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-medium mr-3">
+                    {member.name.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">{member.name}</div>
+                  </div>
+                </div>
+                <div className="col-span-3 text-center text-sm text-gray-500">{member.role}</div>
+                <div className="col-span-3 text-right">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#8B0000]/10 text-[#8B0000] font-medium text-sm">
+                    {member.completedSpeeches}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-r from-[#8B0000] to-[#660000] text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              Ready to Start Your Speaking Journey?
+            </motion.h2>
+            <motion.p 
+              className="text-lg md:text-xl opacity-90 mb-8 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              Join our next meeting and take the first step towards becoming a confident communicator and leader.
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Button 
+                variant="secondary" 
+                size="lg" 
+                className="bg-white text-[#8B0000] hover:bg-gray-100 font-medium text-base px-8 py-6"
+                onClick={() => {}}
+              >
+                Join Our Next Meeting
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-2 border-white text-white hover:bg-white/10 font-medium text-base px-8 py-6"
+                onClick={() => {}}
+              >
+                Learn More
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Modal */}
+      <AnimatePresence>
+        {isModalOpen && selectedSpeech && (
+          <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-screen items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                onClick={closeSpeechModal}
+              />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="relative bg-white rounded-2xl max-w-2xl w-full mx-auto z-10 overflow-hidden shadow-2xl"
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900">{selectedSpeech.name}</h3>
+                    <button
+                      onClick={closeSpeechModal}
+                      className="text-gray-400 hover:text-gray-500 transition-colors"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center text-sm text-gray-500">
+                      <Clock className="w-4 h-4 mr-2 text-[#8B0000]" />
+                      <span>{selectedSpeech.time}</span>
+                    </div>
+                    <p className="text-gray-700">{selectedSpeech.description}</p>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Objectives:</h4>
+                      <ul className="space-y-2">
+                        {selectedSpeech.objectives.map((obj, i) => (
+                          <li key={i} className="flex items-start">
+                            <CheckCircle className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <span className="text-gray-700">{obj}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
+                  <Button
+                    variant="outline"
+                    onClick={closeSpeechModal}
+                  >
+                    Close
+                  </Button>
+                  <Button className="bg-[#8B0000] hover:bg-[#660000]">
+                    Mark as Complete
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -92,7 +92,7 @@ const executiveCommittee: CommitteeMember[] = [
   {
     name: "Atnatewos Hailealem",
     role: "Secretary",
-    image: "/members/secretary.jpg"
+    image: "/members/secretary.jpeg"
   },
   {
     name: "Yonatan Getachew",
@@ -146,7 +146,7 @@ const AboutPage = (): JSX.Element => {
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 z-10"></div>
-          <Image 
+          <Image
             src="/information/about-hero.jpg" 
             alt="SMU Gavel Club Members"
             fill
@@ -252,7 +252,7 @@ const AboutPage = (): JSX.Element => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <Image 
+              <Image
                 src="/information/history.jpg" 
                 alt="SMU Gavel Club History"
                 fill

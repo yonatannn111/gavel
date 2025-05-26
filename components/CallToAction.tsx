@@ -17,7 +17,7 @@ export default function CallToAction() {
               size="lg" 
               className="bg-white text-[#8B0000] hover:bg-gray-100 px-8 py-6 text-lg font-medium rounded-lg"
             >
-              <Link href="/join" className="flex items-center gap-2">
+              <Link href="/contact" className="flex items-center gap-2">
                 Become a Member
                 <ArrowRight className="h-5 w-5" />
               </Link>

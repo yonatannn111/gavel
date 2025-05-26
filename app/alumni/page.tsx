@@ -22,6 +22,7 @@ import {
   ArrowRight,
   Eye
 } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -218,22 +219,16 @@ export default function AlumniPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-[#8B0000] to-[#6B0000] text-white pt-28 pb-32 md:pt-36 md:pb-40">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-        </div>
-        <div className="container mx-auto px-4 text-center relative z-10">
+      <section className="bg-gradient-to-r from-[#8B0000] to-[#660000] text-white py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="text-center max-w-4xl mx-auto"
           >
-            <div className="mb-6 overflow-visible">
-              <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200 leading-[0.9] pb-3">
-                Alumni Spotlights
-              </h1>
-            </div>
-            <p className="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Alumni Network</h1>
+            <p className="text-lg md:text-xl opacity-90">
               Discover how our alumni are making an impact in their careers and communities
             </p>
           </motion.div>
@@ -325,23 +320,11 @@ export default function AlumniPage() {
                       <h3 className="text-lg font-bold text-gray-900">{alum.name}</h3>
                       <p className="text-sm text-gray-600">{alum.currentRole}</p>
                       <p className="text-xs text-[#8B0000] font-medium mt-1">Class of {alum.graduationYear}</p>
+                      <div className="w-12 h-0.5 bg-gray-200 my-3"></div>
                     </div>
                     
-                    {/* Stats */}
-                    <div className="flex justify-between text-xs text-gray-500 my-4 border-t border-b border-gray-100 py-3">
-                      <div className="text-center">
-                        <div className="font-semibold text-gray-900">{alum.likes}</div>
-                        <div>Likes</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="font-semibold text-gray-900">{alum.comments}</div>
-                        <div>Views</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="font-semibold text-gray-900">{alum.shares}</div>
-                        <div>Shares</div>
-                      </div>
-                    </div>
+                    {/* Spacer */}
+                    <div className="h-4"></div>
                     
                     {/* Testimonial Preview */}
                     <div className="mb-4 flex-1 min-h-[4.5rem]">
@@ -354,16 +337,24 @@ export default function AlumniPage() {
                     <div className="flex items-center justify-between border-t border-gray-100 pt-3 px-1">
                       <div className="flex items-center">
                         <button 
-                          onClick={() => toggleLike(alum.id)}
-                          className={`flex items-center space-x-1.5 py-1.5 px-3 rounded-md text-sm font-medium transition-colors ${alum.isLiked ? 'text-red-500 hover:bg-red-50' : 'text-gray-500 hover:bg-gray-50'}`}
+                          onClick={() => {
+                            // Implement share functionality
+                            if (navigator.share) {
+                              navigator.share({
+                                title: `SMU Gavel Club Alumnus: ${alum.name}`,
+                                text: `Check out ${alum.name}'s journey from SMU Gavel Club to ${alum.currentRole}`,
+                                url: window.location.href,
+                              }).catch(console.error);
+                            } else {
+                              // Fallback for browsers that don't support Web Share API
+                              navigator.clipboard.writeText(window.location.href);
+                              alert('Link copied to clipboard!');
+                            }
+                          }}
+                          className="flex items-center space-x-1.5 py-1.5 px-3 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
                         >
-                          <Heart 
-                            className={`w-5 h-5 ${alum.isLiked ? 'fill-current' : ''}`} 
-                            size={18} 
-                            strokeWidth={alum.isLiked ? 2 : 1.5} 
-                            fill={alum.isLiked ? 'currentColor' : 'none'}
-                          />
-                          <span>{alum.isLiked ? 'Liked' : 'Like'}</span>
+                          <Share2 className="w-5 h-5" size={18} strokeWidth={1.5} />
+                          <span>Share</span>
                         </button>
                       </div>
                       
@@ -569,6 +560,8 @@ export default function AlumniPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Removed 'Stay connected' section as requested */}
     </div>
   );
 }

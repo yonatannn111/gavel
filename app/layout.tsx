@@ -7,6 +7,7 @@ import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 import { Toaster } from 'sonner';
 import { AnimatedContent } from './AnimatedContent';
+import LayoutWrapper from '@/components/layout-wrapper';
 import { metadata } from './metadata';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -21,16 +22,18 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head />
-      <body className={`${inter.className} bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100`}>
+      <body className={`${inter.className} bg-white text-gray-900`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
           <Navbar />
           <AnimatedContent>
-            {children}
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
           </AnimatedContent>
           <Footer />
           <Toaster position="top-center" richColors />

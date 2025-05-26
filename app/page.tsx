@@ -21,10 +21,31 @@ import {
   CalendarDays,
   MessageSquare
 } from "lucide-react";
+import { EventCard } from "@/components/events/event-card";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import CallToAction from "@/components/CallToAction";
+import { TestimonialSlider } from "@/components/testimonials/testimonial-slider";
+
+interface Testimonial {
+  id: string;
+  quote: string;
+  name: string;
+  role: string;
+  initials: string;
+}
+
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  type: string;
+  image: string;
+}
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -59,9 +80,9 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#8B0000] to-[#600000] text-white py-24 md:py-36 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#8B0000] to-[#600000] text-white min-h-[calc(100vh-4rem)] flex items-center pt-16">
         {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30"></div>
           
@@ -90,7 +111,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="container mx-auto px-4 z-10 relative">
+        <div className="container mx-auto px-4 z-10 relative w-full py-12">
           <motion.div 
             className="max-w-4xl mx-auto text-center"
             initial="hidden"
@@ -133,7 +154,7 @@ export default function Home() {
                 size="lg" 
                 className="btn-gradient group text-lg px-8 py-6 font-semibold rounded-xl"
               >
-                <Link href="/join" className="flex items-center gap-2">
+                <Link href="/contact" className="flex items-center gap-2">
                   Join Us Now
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -322,7 +343,7 @@ export default function Home() {
               Upcoming Events
             </motion.h2>
             <motion.p 
-              className="text-lg text-gray-600 max-w-2xl mx-auto mb-8"
+              className="text-lg text-gray-600 max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -330,247 +351,167 @@ export default function Home() {
             >
               Join our upcoming events to enhance your public speaking and leadership skills
             </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <Button asChild variant="outline" className="border-[#8B0000] text-[#8B0000] hover:bg-[#8B0000] hover:text-white transition-colors">
-                <Link href="/events" className="flex items-center gap-2">
-                  View All Events <ChevronRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </motion.div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Event Card 1 */}
-            <motion.div 
-              className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                id: "1",
+                title: "Weekly Club Meeting",
+                description: "Join us for our regular meeting featuring prepared speeches, evaluations, and impromptu speaking sessions.",
+                date: "2025-03-23T15:00:00",
+                time: "03:00 PM",
+                location: "Main Auditorium",
+                type: "meeting",
+                image: "/events/passed000.jpg"
+              },
+              {
+                id: "2",
+                title: "Leadership Training Workshop",
+                description: "A special workshop focused on mastering the art of persuasive speaking and effective body language.",
+                date: "2025-04-15T18:20:00",
+                time: "06:20 PM",
+                location: "Conference Hall",
+                type: "workshop",
+                image: "/events/passed.jpeg"
+              },
+              {
+                id: "3",
+                title: "Communications Skill Workshop",
+                description: "Our flagship event where members compete in various speech categories to showcase their skills.",
+                date: "2025-04-24T18:20:00",
+                time: "06:20 PM",
+                location: "Grand Hall",
+                type: "workshop",
+                image: "/events/upcoming.jpeg"
+              }
+            ].map((event, index) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <EventCard event={event} />
+              </motion.div>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Button
+              asChild
+              variant="outline"
+              className="border-[#8B0000] text-[#8B0000] hover:bg-[#8B0000] hover:text-white transition-colors"
             >
-              <div className="h-56 relative overflow-hidden">
-                <Image 
-                  src="/events/passed000.jpg" 
-                  alt="Weekly Meeting"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute top-4 right-4 bg-[#8B0000] text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  Upcoming
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-3">
-                  <CalendarDays className="h-4 w-4 mr-2 text-[#8B0000]" />
-                  <span>March 23, 2025</span>
-                  <span className="mx-2">•</span>
-                  <Clock className="h-4 w-4 mr-2 text-[#8B0000]" />
-                  <span>03:00 PM</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#8B0000] transition-colors">
-                  Weekly Club Meeting
-                </h3>
-                <p className="text-gray-600 mb-5 line-clamp-3">
-                  Join us for our regular meeting featuring prepared speeches, evaluations, and impromptu speaking sessions.
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <MapPin className="h-4 w-4 mr-1 text-[#8B0000]" />
-                    <span>Main Auditorium</span>
-                  </div>
-                  <Button asChild variant="link" className="text-[#8B0000] p-0 h-auto font-semibold group/button">
-                    <Link href="/events" className="flex items-center gap-1">
-                      Learn More
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover/button:translate-x-1" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Event Card 2 */}
-            <motion.div 
-              className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <div className="h-56 relative overflow-hidden">
-                <Image 
-                  src="/events/passed.jpeg" 
-                  alt="Leadership Training"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute top-4 right-4 bg-[#8B0000] text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  Workshop
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-3">
-                  <CalendarDays className="h-4 w-4 mr-2 text-[#8B0000]" />
-                  <span>April 15, 2025</span>
-                  <span className="mx-2">•</span>
-                  <Clock className="h-4 w-4 mr-2 text-[#8B0000]" />
-                  <span>06:20 PM</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#8B0000] transition-colors">
-                  Leadership Training Workshop
-                </h3>
-                <p className="text-gray-600 mb-5 line-clamp-3">
-                  A special workshop focused on mastering the art of persuasive speaking and effective body language.
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <MapPin className="h-4 w-4 mr-1 text-[#8B0000]" />
-                    <span>Conference Hall</span>
-                  </div>
-                  <Button asChild variant="link" className="text-[#8B0000] p-0 h-auto font-semibold group/button">
-                    <Link href="/events" className="flex items-center gap-1">
-                      Learn More
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover/button:translate-x-1" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Event Card 3 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="h-48 relative">
-                <Image 
-                  src="./events/upcoming.jpeg" 
-                  alt="Communications Skill Training"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <div className="text-sm text-gray-500 mb-2">April 24, 2025 • 6:20 LT</div>
-                <h3 className="text-xl font-semibold mb-2">Communications Skill Training</h3>
-                <p className="text-gray-600 mb-4">
-                  Our flagship event where members compete in various speech categories to showcase their skills.
-                </p>
-                <Button asChild className="w-full bg-[#8B0000] hover:bg-[#FF0000]">
-                  <Link href="/events">Learn More</Link>
-                </Button>
-              </div>
-            </div>
+              <Link href="/events" className="flex items-center gap-2 mx-auto">
+                View All Events
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 bg-gray-50">
+      {/* Testimonials Section */}
+      <section className="py-20 bg-gray-50 overflow-hidden">
         <div className="container mx-auto px-4">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="inline-block text-sm font-semibold text-[#8B0000] mb-2">TESTIMONIALS</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Members Say</h2>
-            <div className="h-1 w-16 bg-[#8B0000] mx-auto mb-6"></div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Hear from our members about their transformative experiences at SMU Gavel Club
-            </p>
-          </motion.div>
-
-          <div className="relative max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                {
-                  id: 1,
-                  quote: "Joining the SMU Gavel Club was one of the best decisions I made during my university years. It transformed me from someone who feared public speaking to someone who now embraces it.",
-                  name: "Henok Elias",
-                  role: "Member since 2023",
-                  initials: "JL",
-                },
-                {
-                  id: 2,
-                  quote: "The supportive environment at Gavel Club helped me develop not just as a speaker, but as a leader. The skills I gained here have been invaluable in my professional career.",
-                  name: "Getacher Tsegaye",
-                  role: "Member since 2022",
-                  initials: "MT",
-                },
-                {
-                  id: 3,
-                  quote: "As an international student, Gavel Club provided me with a platform to improve my English speaking skills and make friends. The feedback I received was always constructive and encouraging.",
-                  name: "Eyuel Mamushet",
-                  role: "Secretary since 2024",
-                  initials: "SG",
-                },
-                {
-                  id: 4,
-                  quote: "The mentorship and guidance I received at Gavel Club were instrumental in building my confidence. I've grown so much both personally and professionally.",
-                  name: "Alex Chen",
-                  role: "Vice President",
-                  initials: "AC",
-                },
-                {
-                  id: 5,
-                  quote: "Being part of Gavel Club has been a game-changer for me. The supportive community and structured learning environment helped me overcome my fear of public speaking.",
-                  name: "Priya Patel",
-                  role: "Treasurer",
-                  initials: "PP",
-                },
-                {
-                  id: 6,
-                  quote: "The skills I learned at Gavel Club have been directly applicable to my job interviews and presentations. It's one of the most valuable experiences of my university life.",
-                  name: "David Kim",
-                  role: "Member since 2023",
-                  initials: "DK",
-                },
-              ].map((testimonial, index) => (
-                <motion.div 
-                  key={testimonial.id}
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <div className="mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        className="w-5 h-5 text-yellow-400 inline-block"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <p className="text-gray-700 italic mb-6 text-lg leading-relaxed">"{testimonial.quote}"</p>
-                  <div className="flex items-center">
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-r from-[#8B0000] to-[#FF0000] flex items-center justify-center text-white text-lg font-bold">
-                      {testimonial.initials}
-                    </div>
-                    <div className="ml-4">
-                      <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                      <p className="text-sm text-gray-600">{testimonial.role}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+          <div className="text-center mb-16">
+            <motion.h2 
+              className="text-4xl font-bold text-gray-900 mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              What Our Members Say
+            </motion.h2>
+            <motion.p 
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Hear from our members about their experiences and growth at Gavel Club.
+            </motion.p>
+          </div>
+          
+          <div className="space-y-8">
+            {/* Top row - slides left */}
+            <div className="relative">
+              <TestimonialSlider 
+                testimonials={[
+                  {
+                    id: "1",
+                    quote: "The supportive environment at Gavel Club helped me develop not just as a speaker, but as a leader. The skills I gained here have been invaluable in my professional career.",
+                    name: "Getacher Tsegaye",
+                    role: "President",
+                    image: "president.jpg"
+                  },
+                  {
+                    id: "2",
+                    quote: "As an international student, Gavel Club provided me with a platform to improve my English speaking skills and make friends. The feedback I received was always constructive and encouraging.",
+                    name: "Eyuel Mamushet",
+                    role: "Secretary",
+                    image: "secretary.jpeg"
+                  },
+                  {
+                    id: "3",
+                    quote: "The mentorship and guidance I received at Gavel Club were instrumental in building my confidence. I've grown so much both personally and professionally.",
+                    name: "Alex Chen",
+                    role: "Vice President",
+                    image: "relations.jpeg"
+                  },
+                  {
+                    id: "4",
+                    quote: "Being part of Gavel Club has been a game-changer for me. The supportive community and structured learning environment helped me overcome my fear of public speaking.",
+                    name: "Priya Patel",
+                    role: "Treasurer",
+                    image: "Treasurer.jpg"
+                  }
+                ]}
+                direction="left"
+                duration={15}
+              />
             </div>
             
-            <div className="flex justify-center mt-12 space-x-3">
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-[#8B0000] transition-colors"></button>
-              <button className="w-3 h-3 rounded-full bg-[#8B0000]"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-[#8B0000] transition-colors"></button>
+            {/* Bottom row - slides right */}
+            <div className="relative mt-8">
+              <TestimonialSlider 
+                testimonials={[
+                  {
+                    id: "5",
+                    quote: "The skills I learned at Gavel Club have been directly applicable to my job interviews and presentations. It's one of the most valuable experiences of my university life.",
+                    name: "David Kim",
+                    role: "Sergent at Arms",
+                    image: "sergent.jpeg"
+                  },
+                  {
+                    id: "6",
+                    quote: "The structured approach to public speaking at Gavel Club has transformed how I communicate in both professional and personal settings.",
+                    name: "Sarah Johnson",
+                    role: "Membership Officer",
+                    image: "membership.jpg"
+                  },
+                  {
+                    id: "7",
+                    quote: "I never thought I'd enjoy public speaking, but Gavel Club made it fun and rewarding. The supportive environment is truly special.",
+                    name: "Michael Brown",
+                    role: "Public Relations",
+                    image: "relations.jpeg"
+                  },
+                  {
+                    id: "8",
+                    quote: "The leadership opportunities at Gavel Club have been instrumental in my personal and professional development.",
+                    name: "Emily Wilson",
+                    role: "Event Coordinator",
+                    image: "secretary.jpeg"
+                  }
+                ]}
+                direction="right"
+                duration={15}
+              />
             </div>
           </div>
         </div>
