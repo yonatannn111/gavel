@@ -40,7 +40,7 @@ const routes = [
     label: "Alumni"
   },
   { 
-    href: "/join", 
+    href: "/contact", 
     label: "Join Us",
     highlighted: true
   },

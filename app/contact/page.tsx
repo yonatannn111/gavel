@@ -194,10 +194,9 @@ export default function ContactPage() {
                     className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-[#8B0000] transition-colors"
                   >
                     <AccordionTrigger className="px-6 py-5 text-left hover:no-underline hover:bg-gray-100/50 transition-colors group">
-                      <div className="flex items-start w-full">
-                        {faq.icon || <HelpCircle className="w-5 h-5 text-[#8B0000] mr-3 mt-0.5 flex-shrink-0" />}
-                        <span className="font-semibold text-gray-900 text-left flex-grow">{faq.question}</span>
-                        <ChevronDown className="h-5 w-5 text-[#8B0000] ml-3 flex-shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                      <div className="flex items-center w-full">
+                        {faq.icon || <HelpCircle className="w-5 h-5 text-[#8B0000] mr-3 flex-shrink-0" />}
+                        <span className="font-semibold text-gray-900 text-left">{faq.question}</span>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-5 pt-0 text-gray-600 bg-white">
@@ -209,45 +208,41 @@ export default function ContactPage() {
                 </motion.div>
               ))}
             </Accordion>
-            
-            <motion.div 
-              className="bg-gradient-to-r from-[#8B0000] to-[#660000] rounded-xl p-8 text-center mt-16 text-white"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <h3 className="text-2xl font-bold mb-3">Still have questions?</h3>
-              <p className="mb-6 opacity-90 max-w-2xl mx-auto">
-                Our team is here to help! Reach out to us using the contact form below or connect with us on social media.
-              </p>
-              <Button 
-                asChild 
-                variant="outline"
-                className="bg-transparent border-white text-white hover:bg-white/10 hover:text-white"
-              >
-                <a href="#contact">
-                  Contact Us
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
-            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Contact Form Section */}
-      <section id="contact" className="py-20 bg-gray-50">
+      <section id="contact" className="py-20 bg-white">
         <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Still have questions?
+            </motion.h2>
+            <motion.p 
+              className="text-lg text-gray-600 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Our team is here to help! Fill out the form below and we'll get back to you as soon as possible.
+            </motion.p>
+          </div>
+          
           <div className="max-w-6xl mx-auto">
-            <div className="mb-12"></div>
-
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 {/* Left Side - Contact Form */}
                 <div className="p-8 md:p-12">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Send Us a Message</h3>
-                  <p className="text-gray-600 mb-8">Have questions? We're here to help!</p>
+                  <p className="text-gray-600 mb-8">Fill out the form and we'll get back to you shortly.</p>
                   
                   {isSubmitted && (
                     <motion.div 
@@ -356,11 +351,7 @@ export default function ContactPage() {
                 {/* Right Side - Contact Info */}
                 <div className="bg-gray-50 p-8 md:p-12 flex flex-col">
                   <div className="mb-8">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h3>
-                    <p className="text-gray-600 mb-6">
-                      We'd love to hear from you! Whether you have questions about our club, 
-                      want to attend a meeting, or are interested in joining, feel free to reach out.
-                    </p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h3>
                     
                     <div className="space-y-6">
                       <div className="flex items-start">
