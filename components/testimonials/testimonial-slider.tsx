@@ -21,6 +21,7 @@ interface TestimonialSliderProps {
 
 const DUPLICATION_FACTOR = 3; // Number of times to duplicate the items
 const ANIMATION_DURATION = 90; // Increased duration for even slower animation
+const SLIDE_DISTANCE = '-50%'; // How far the slide should move
 
 export function TestimonialSlider({
   testimonials,
@@ -65,19 +66,58 @@ export function TestimonialSlider({
     },
   };
   
-  // Handle hover state
-  useEffect(() => {
-    if (isHovered) {
-      controls.stop();
-    } else {
-      controls.start(direction);
-    }
-  }, [isHovered, controls, direction]);
+  // Track the current progress
+  const [progress, setProgress] = useState(0);
+  const animationRef = useRef<number>();
+  const startTime = useRef<number>();
+  const lastTime = useRef<number>();
   
-  // Start animation on mount
+  // Animation loop
+  const animate = (time: number) => {
+    if (!startTime.current) startTime.current = time;
+    if (!lastTime.current) lastTime.current = time;
+    
+    const elapsed = time - startTime.current;
+    const delta = time - lastTime.current;
+    lastTime.current = time;
+    
+    if (!isHovered) {
+      // Update progress based on direction
+      const newProgress = (progress + (delta / (ANIMATION_DURATION * 1000))) % 1;
+      setProgress(newProgress);
+      
+      // Calculate x position based on progress and direction
+      let x = 0;
+      if (direction === 'right') {
+        x = -progress * 100; // Move left
+      } else {
+        x = progress * 100 - 50; // Move right
+      }
+      
+      if (sliderRef.current) {
+        sliderRef.current.style.transform = `translateX(${x}%)`;
+      }
+    }
+    
+    animationRef.current = requestAnimationFrame(animate);
+  };
+  
+  // Start/stop animation on mount/unmount and hover changes
   useEffect(() => {
-    controls.start(direction);
-  }, [controls, direction]);
+    animationRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isHovered, progress, direction]);
+  
+  // Reset animation when direction changes
+  useEffect(() => {
+    setProgress(0);
+    startTime.current = undefined;
+    lastTime.current = undefined;
+  }, [direction]);
 
   return (
     <div 
