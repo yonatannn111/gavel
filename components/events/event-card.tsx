@@ -40,7 +40,12 @@ export function EventCard({ event, isSelected = false, onClick, className }: Eve
     >
       <div className="relative h-40 bg-gray-100 overflow-hidden">
         <Image 
-          src={event.image || '/events/placeholder.jpg'} 
+          src={event.image || 
+               (event.type === 'workshop' ? '/events/upcoming/upcoming_1.jpg' : 
+                event.type === 'contest' ? '/events/upcoming/upcoming_2.png' :
+                event.type === 'ceremony' ? '/events/upcoming/upcoming_3.png' :
+                event.type === 'networking' ? '/events/upcoming/upcoming_4.png' :
+                '/events/past/past_1.jpg')} 
           alt={event.title} 
           fill 
           className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -192,7 +192,7 @@ export default function Home() {
         
         {/* Scrolling indicator */}
         <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center"
+          className="absolute bottom-8 left-0 right-0 mx-auto w-full flex flex-col items-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.5 }}
@@ -225,7 +225,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              Our Mission & Values
+              Our Mission
             </motion.span>
             <motion.h2 
               className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
@@ -363,7 +363,7 @@ export default function Home() {
                 time: "03:00 PM",
                 location: "Main Auditorium",
                 type: "meeting",
-                image: "/events/passed000.jpg"
+                image: "/events/upcoming/upcoming_1.jpg"
               },
               {
                 id: "2",
@@ -373,7 +373,7 @@ export default function Home() {
                 time: "06:20 PM",
                 location: "Conference Hall",
                 type: "workshop",
-                image: "/events/passed.jpeg"
+                image: "/events/upcoming/upcoming_2.png"
               },
               {
                 id: "3",
@@ -383,7 +383,7 @@ export default function Home() {
                 time: "06:20 PM",
                 location: "Grand Hall",
                 type: "workshop",
-                image: "/events/upcoming.jpeg"
+                image: "/events/upcoming/upcoming_3.png"
               }
             ].map((event, index) => (
               <motion.div
