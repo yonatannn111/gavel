@@ -283,7 +283,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.1 * index }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative p-8 h-full flex flex-col">
+                <div className="relative p-6 h-full flex flex-col">
                   <div 
                     className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110"
                     style={{ backgroundColor: `${item.color}10` }}
@@ -293,13 +293,10 @@ export default function Home() {
                   <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#8B0000] transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-gray-600 mb-6 flex-grow">
+                  <p className="text-gray-600 flex-grow">
                     {item.description}
                   </p>
-                  <div className="flex items-center text-sm font-medium text-[#8B0000] mt-auto">
-                    <span>Learn more</span>
-                    <ArrowRight className="h-4 w-4 ml-1.5 transition-transform group-hover:translate-x-1" />
-                  </div>
+
                 </div>
                 <div 
                   className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#8B0000] to-[#FF0000] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -399,14 +396,13 @@ export default function Home() {
           </div>
           
           <div className="mt-12 text-center">
-            <Button
-              asChild
-              variant="outline"
-              className="border-[#8B0000] text-[#8B0000] hover:bg-[#8B0000] hover:text-white transition-colors"
+            <Button 
+              asChild 
+              className="bg-gradient-to-r from-[#8B0000] to-[#B91C1C] hover:from-[#B91C1C] hover:to-[#8B0000] text-white px-8 py-6 text-base font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
             >
-              <Link href="/events" className="flex items-center gap-2 mx-auto">
+              <Link href="/events" className="flex items-center gap-2">
                 View All Events
-                <ChevronRight className="h-4 w-4" />
+                <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
           </div>

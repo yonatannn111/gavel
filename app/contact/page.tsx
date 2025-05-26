@@ -13,23 +13,22 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { 
-  Facebook, 
   Instagram, 
-  Twitter, 
   Mail, 
   MapPin, 
   Phone, 
   Clock,
   Calendar,
+  Linkedin,
+  Youtube,
   MessageSquare,
   CheckCircle,
   ArrowRight,
-  Linkedin,
   User,
   HelpCircle,
   Award,
   Mic,
-  ChevronDown
+  MessageCircle
 } from "lucide-react";
 import { fadeInUpVariant, staggerContainer } from "../AnimatedContent";
 
@@ -392,15 +391,21 @@ export default function ContactPage() {
                       </div>
                     </div>
                   </div>
-                  
                   <div className="mt-auto">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Connect With Us</h3>
                     <div className="flex space-x-3">
                       {[
-                        { icon: Facebook, url: "https://facebook.com", label: "Facebook" },
-                        { icon: Instagram, url: "https://instagram.com", label: "Instagram" },
-                        { icon: Twitter, url: "https://twitter.com", label: "Twitter" },
-                        { icon: Linkedin, url: "https://linkedin.com", label: "LinkedIn" }
+                        { icon: Instagram, url: "https://www.instagram.com/smu_gavel_club?igsh=cHRpOWIwdjN1eGkw&utm_source=qr", label: "Instagram" },
+                        { icon: MessageCircle, url: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                        { icon: Linkedin, url: "https://www.linkedin.com/groups/13246137/", label: "LinkedIn" },
+                        { icon: Youtube, 
+                          url: "#", 
+                          label: "YouTube",
+                          onClick: (e: React.MouseEvent) => {
+                            e.preventDefault();
+                            alert('YouTube coming soon!');
+                          } 
+                        }
                       ].map((social) => (
                         <a
                           key={social.label}

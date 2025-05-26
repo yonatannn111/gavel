@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Facebook, Instagram, Twitter, Mail, MapPin, Phone, Clock, Youtube, Linkedin } from "lucide-react";
+import { Instagram, Mail, MapPin, Phone, Clock, Youtube, Linkedin, MessageCircle } from "lucide-react";
 
 const footerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -43,11 +43,13 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4 pt-2">
               {[
-                { icon: Facebook, href: "https://facebook.com/smugavelclub", label: "Facebook" },
-                { icon: Instagram, href: "https://instagram.com/smugavelclub", label: "Instagram" },
-                { icon: Twitter, href: "https://twitter.com/smugavelclub", label: "Twitter" },
-                { icon: Linkedin, href: "https://linkedin.com/company/smugavelclub", label: "LinkedIn" },
-                { icon: Youtube, href: "https://youtube.com/@smugavelclub", label: "YouTube" }
+                { icon: Instagram, href: "https://www.instagram.com/smu_gavel_club?igsh=cHRpOWIwdjN1eGkw&utm_source=qr", label: "Instagram" },
+                { icon: MessageCircle, href: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                { icon: Linkedin, href: "https://www.linkedin.com/groups/13246137/", label: "LinkedIn" },
+                { icon: Youtube, href: "#", label: "YouTube", onClick: (e: React.MouseEvent) => {
+                  e.preventDefault();
+                  alert('YouTube coming soon!');
+                } }
               ].map(({ icon: Icon, href, label }, index) => (
                 <motion.a
                   key={label}

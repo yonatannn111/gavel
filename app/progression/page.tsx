@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   X, 
@@ -254,7 +254,7 @@ export default function ProgressionPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-transparent"></div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl mx-auto text-center mb-16">
+          <div className="text-center mb-16">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -295,7 +295,7 @@ export default function ProgressionPage() {
             </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 title: "Official Recognition",
@@ -340,29 +340,38 @@ export default function ProgressionPage() {
             ].map((benefit, index) => (
               <motion.div
                 key={index}
-                className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300"
-                initial={{ opacity: 0, y: 20 }}
+                className="group relative bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full flex flex-col"
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="w-12 h-12 rounded-lg bg-[#8B0000]/10 flex items-center justify-center mb-4">
-                  {benefit.icon}
+                <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative p-6 h-full flex flex-col">
+                  <div 
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
+                    style={{ backgroundColor: '#8B000010' }}
+                  >
+                    {React.cloneElement(benefit.icon, { className: 'h-6 w-6 text-[#8B0000]' })}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#8B0000] transition-colors">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    {benefit.description}
+                  </p>
+                  <ul className="space-y-2 mt-2">
+                    {benefit.features.map((feature, i) => (
+                      <li key={i} className="flex items-start">
+                        <CheckCircle className="w-4 h-4 text-[#8B0000] mt-0.5 mr-2 flex-shrink-0" />
+                        <span className="text-gray-700 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {benefit.title}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {benefit.description}
-                </p>
-                <ul className="space-y-2">
-                  {benefit.features.map((feature, i) => (
-                    <li key={i} className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-[#8B0000] mt-0.5 mr-2 flex-shrink-0" />
-                      <span className="text-gray-700 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div 
+                  className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#8B0000] to-[#FF0000] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                ></div>
               </motion.div>
             ))}
           </div>
