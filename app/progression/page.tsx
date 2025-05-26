@@ -183,25 +183,17 @@ export default function ProgressionPage() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Your Speaking Journey</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">The Competent Communicator Journey</h1>
             <p className="text-lg md:text-xl opacity-90">
-              Progress through structured speech levels and track your growth as a confident communicator
+              Master public speaking through Toastmasters' structured 10-speech program, building from fundamentals to advanced techniques.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Program Overview */}
+      {/* Speech Levels Grid */}
       <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">The Competent Communicator Journey</h2>
-            <div className="w-16 h-1 bg-[#8B0000] mx-auto my-4"></div>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Master public speaking through Toastmasters' structured 10-speech program, building from fundamentals to advanced techniques.
-            </p>
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
             {speechProgress.levels.map((speech, index) => (
               <motion.div
@@ -253,9 +245,13 @@ export default function ProgressionPage() {
         </div>
       </section>
 
+      {/* Divider */}
+      <div className="h-16 bg-gradient-to-b from-white to-gray-50"></div>
+      
       {/* CC Achievement Section */}
-      <section className="relative py-16 bg-white overflow-hidden">
+      <section className="relative py-20 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/toastmasters-pattern-light.png')] opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-transparent"></div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center mb-16">
@@ -266,7 +262,7 @@ export default function ProgressionPage() {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center justify-center px-5 py-1.5 rounded-full bg-[#8B0000] text-white text-xs font-medium uppercase tracking-wider mb-6"
             >
-              Achievement Unlocked
+              Unlock Achievement
             </motion.div>
             
             <motion.h2 
@@ -485,15 +481,12 @@ export default function ProgressionPage() {
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
+                <div className="bg-gray-50 px-6 py-4 flex justify-end">
                   <Button
                     variant="outline"
                     onClick={closeSpeechModal}
                   >
                     Close
-                  </Button>
-                  <Button className="bg-[#8B0000] hover:bg-[#660000]">
-                    Mark as Complete
                   </Button>
                 </div>
               </motion.div>
