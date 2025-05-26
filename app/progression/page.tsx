@@ -295,12 +295,12 @@ export default function ProgressionPage() {
             </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {[
               {
                 title: "Official Recognition",
-                description: "Receive a globally recognized certificate from Toastmasters International",
-                icon: <FileText className="w-6 h-6 text-[#8B0000]" />,
+                description: "Globally recognized certificate from Toastmasters International",
+                icon: <FileText className="w-5 h-5 text-[#8B0000]" />,
                 features: [
                   "Globally recognized credential",
                   "Verifiable digital badge",
@@ -308,19 +308,19 @@ export default function ProgressionPage() {
                 ]
               },
               {
-                title: "Professional Advantages",
-                description: "Enhance your career prospects with this valuable credential",
-                icon: <Briefcase className="w-6 h-6 text-[#8B0000]" />,
+                title: "Career Benefits",
+                description: "Enhance your professional profile",
+                icon: <Briefcase className="w-5 h-5 text-[#8B0000]" />,
                 features: [
                   "Stand out in job applications",
                   "Enhance your LinkedIn profile",
-                  "Demonstrate communication skills"
+                  "Demonstrate key skills"
                 ]
               },
               {
                 title: "Personal Growth",
-                description: "Develop essential communication and leadership abilities",
-                icon: <Award className="w-6 h-6 text-[#8B0000]" />,
+                description: "Develop essential abilities",
+                icon: <Award className="w-5 h-5 text-[#8B0000]" />,
                 features: [
                   "Increased confidence",
                   "Improved public speaking",
@@ -328,38 +328,39 @@ export default function ProgressionPage() {
                 ]
               },
               {
-                title: "Community & Network",
-                description: "Join an exclusive community of communicators",
-                icon: <UsersIcon className="w-6 h-6 text-[#8B0000]" />,
+                title: "Network",
+                description: "Join a global community",
+                icon: <UsersIcon className="w-5 h-5 text-[#8B0000]" />,
                 features: [
-                  "Global Toastmasters network",
-                  "Local club connections",
-                  "Professional networking"
+                  "Global network",
+                  "Local connections",
+                  "Professional opportunities"
                 ]
               }
             ].map((benefit, index) => (
               <motion.div
                 key={index}
-                className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300"
+                className="group bg-white rounded-lg border border-gray-100 p-6 hover:border-[#8B0000]/30 transition-all duration-300 h-full flex flex-col"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)' }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
-                <div className="w-12 h-12 rounded-lg bg-[#8B0000]/10 flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center mb-4 group-hover:bg-[#8B0000]/20 transition-colors">
                   {benefit.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#8B0000] transition-colors">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 text-sm mb-4">
                   {benefit.description}
                 </p>
-                <ul className="space-y-2">
+                <ul className="space-y-2 mt-auto pt-4 border-t border-gray-100">
                   {benefit.features.map((feature, i) => (
-                    <li key={i} className="flex items-start">
+                    <li key={i} className="flex items-start text-sm">
                       <CheckCircle className="w-4 h-4 text-[#8B0000] mt-0.5 mr-2 flex-shrink-0" />
-                      <span className="text-gray-700 text-sm">{feature}</span>
+                      <span className="text-gray-600">{feature}</span>
                     </li>
                   ))}
                 </ul>
