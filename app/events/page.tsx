@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, Search, X } from "lucide-react";
-import { Event as EventType, eventTypes, upcomingEvents, pastEvents } from "@/types/events";
+import { Event, EventType, eventTypes, upcomingEvents, pastEvents } from "@/types/events";
 import { EventCard } from "@/components/events/event-card";
 import { filterAndSortEvents, groupEventsByDate } from "@/lib/events";
 
@@ -16,7 +16,7 @@ type TimeFilter = 'all' | 'today' | 'tomorrow' | 'this-week' | 'this-month';
 
 export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTypes, setSelectedTypes] = useState<EventType[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<Event['type'][]>([]);
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [sortBy, setSortBy] = useState<SortOption>('date-asc');
   const [activeTab, setActiveTab] = useState('upcoming');
@@ -28,18 +28,16 @@ export default function EventsPage() {
   const filteredUpcomingEvents = filterAndSortEvents(upcoming, {
     searchQuery,
     selectedTypes,
-    timeFilter,
     sortBy: sortBy.includes('date') ? sortBy : 'date-asc'
   });
 
   const filteredPastEvents = filterAndSortEvents(past, {
     searchQuery,
     selectedTypes,
-    timeFilter,
     sortBy: sortBy.includes('date') ? sortBy : 'date-desc'
   });
 
-  const toggleEventType = (type: EventType) => {
+  const toggleEventType = (type: Event['type']) => {
     setSelectedTypes(prev => 
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
     );
@@ -66,7 +64,7 @@ export default function EventsPage() {
   const showNoEvents = eventsToShow.length === 0;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-[#8B0000] to-[#660000] text-white py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,7 +83,7 @@ export default function EventsPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-8 md:py-12 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* No filters - Clean layout */}
           <div className="mb-8"></div>
@@ -159,26 +157,6 @@ export default function EventsPage() {
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* CTA Section */}
-          <div className="mt-20 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-12 text-white overflow-hidden relative">
-            <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
-            <div className="relative z-10 max-w-4xl mx-auto text-center">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Host Your Next Event With Us</h2>
-              <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-                Partner with our community to organize workshops, talks, and networking events that inspire and educate.
-              </p>
-              <Button 
-                asChild 
-                size="lg" 
-                className="bg-white text-blue-700 hover:bg-blue-50 transition-colors"
-              >
-                <Link href="/contact">
-                  Get in Touch
-                </Link>
-              </Button>
             </div>
           </div>
         </div>

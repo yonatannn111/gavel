@@ -235,9 +235,9 @@ export default function AlumniPage() {
         </div>
       </section>
 
-      {/* Tabs */}
-      <section className="py-12 bg-transparent">
-        <div className="container mx-auto px-4">
+      {/* Main Content */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="flex flex-wrap justify-center gap-3 mb-12"
             initial={{ opacity: 0, y: 10 }}
@@ -267,7 +267,7 @@ export default function AlumniPage() {
 
           {/* Alumni Grid */}
           <AnimatePresence>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredAlumni.map((alum, index) => (
                 <motion.div
                   key={alum.id}
@@ -386,19 +386,6 @@ export default function AlumniPage() {
               ))}
             </div>
           </AnimatePresence>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Are you an SMU Gavel Club alumnus?</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-            Share your journey and inspire current members by being featured in our alumni spotlight!
-          </p>
-          <button className="bg-[#8B0000] hover:bg-[#6B0000] text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            Share Your Story
-          </button>
         </div>
       </section>
 

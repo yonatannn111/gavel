@@ -209,7 +209,7 @@ export default function Home() {
       </section>
 
       {/* Our Mission Section */}
-      <section className="relative py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+      <section className="relative py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#8B0000]/5 rounded-full mix-blend-multiply filter blur-3xl"></div>
@@ -330,7 +330,7 @@ export default function Home() {
       </section>
 
       {/* Upcoming Events Preview */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <motion.h2 
@@ -414,7 +414,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50 overflow-hidden">
+      <section className="py-12 md:py-16 bg-gray-50 overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <motion.h2 

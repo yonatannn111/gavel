@@ -14,6 +14,7 @@ import {
   Trophy,
   Users as UsersIcon 
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 // Type definitions
@@ -191,7 +192,7 @@ export default function ProgressionPage() {
       </section>
 
       {/* Program Overview */}
-      <section className="py-16 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">The Competent Communicator Journey</h2>
@@ -253,7 +254,7 @@ export default function ProgressionPage() {
       </section>
 
       {/* CC Achievement Section */}
-      <section className="relative py-20 bg-white overflow-hidden">
+      <section className="relative py-16 bg-white overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/toastmasters-pattern-light.png')] opacity-5"></div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -373,7 +374,7 @@ export default function ProgressionPage() {
       </section>
 
       {/* Leaderboard Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Club Leaderboard</h2>
@@ -414,52 +415,25 @@ export default function ProgressionPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-r from-[#8B0000] to-[#660000] text-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.h2 
-              className="text-3xl md:text-4xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              Ready to Start Your Speaking Journey?
-            </motion.h2>
-            <motion.p 
-              className="text-lg md:text-xl opacity-90 mb-8 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              Join our next meeting and take the first step towards becoming a confident communicator and leader.
-            </motion.p>
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
+      <section className="py-12 md:py-16 px-4 bg-white pb-16">
+        <div className="container mx-auto max-w-6xl">
+          <div className="bg-gradient-to-r from-[#8B0000] to-[#FF0000] text-white rounded-xl p-12 text-center shadow-lg transition-all duration-500 hover:shadow-xl">
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Speaking Journey?</h2>
+              <p className="text-xl mb-8">
+                Join our next meeting and take the first step towards becoming a confident communicator and leader.
+              </p>
               <Button 
-                variant="secondary" 
+                asChild 
                 size="lg" 
-                className="bg-white text-[#8B0000] hover:bg-gray-100 font-medium text-base px-8 py-6"
-                onClick={() => {}}
+                className="bg-white text-[#8B0000] hover:bg-gray-100 px-8 py-6 text-lg font-medium rounded-lg hover:scale-105 transition-transform"
               >
-                Join Our Next Meeting
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <Link href="/contact" className="flex items-center gap-2">
+                  Join Our Next Meeting
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-2 border-white text-white hover:bg-white/10 font-medium text-base px-8 py-6"
-                onClick={() => {}}
-              >
-                Learn More
-              </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

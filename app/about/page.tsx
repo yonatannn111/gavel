@@ -146,7 +146,7 @@ const AboutPage = (): JSX.Element => {
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 z-10"></div>
-          <Image
+          <Image 
             src="/information/about-hero.jpg" 
             alt="SMU Gavel Club Members"
             fill
@@ -194,7 +194,7 @@ const AboutPage = (): JSX.Element => {
       </section>
 
       {/* History Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <motion.div 
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
@@ -252,7 +252,7 @@ const AboutPage = (): JSX.Element => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <Image
+              <Image 
                 src="/information/history.jpg" 
                 alt="SMU Gavel Club History"
                 fill
@@ -264,7 +264,7 @@ const AboutPage = (): JSX.Element => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-16"
@@ -306,7 +306,7 @@ const AboutPage = (): JSX.Element => {
       </section>
 
       {/* Executive Committee Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-16"

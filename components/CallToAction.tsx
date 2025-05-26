@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function CallToAction() {
   return (
-    <section className="py-16 px-4 bg-white">
+    <section className="py-12 md:py-16 px-4 bg-white">
       <div className="container mx-auto max-w-6xl">
         <div className="bg-gradient-to-r from-[#8B0000] to-[#FF0000] text-white rounded-xl p-12 text-center shadow-lg transition-all duration-500 hover:shadow-xl">
           <div className="max-w-3xl mx-auto">

@@ -72,7 +72,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-12 md:pb-16">
       {/* Header Section */}
       <header className="bg-gradient-to-r from-[#8B0000] to-[#A52A2A] text-white py-16">
         <div className="container mx-auto px-4">
@@ -91,7 +91,7 @@ export default function ContactPage() {
       </header>
 
       {/* Map Section */}
-      <section className="py-16 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
 
           
@@ -136,7 +136,7 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center max-w-4xl mx-auto mb-16"
