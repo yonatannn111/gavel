@@ -267,118 +267,90 @@ export default function AlumniPage() {
 
           {/* Alumni Grid */}
           <AnimatePresence>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredAlumni.map((alum, index) => (
                 <motion.div
                   key={alum.id}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ 
                     duration: 0.4,
                     delay: index * 0.05,
                     ease: [0.4, 0, 0.2, 1]
                   }}
-                  className="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1 flex flex-col h-full"
+                  className="group relative bg-white rounded-xl border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col h-full overflow-hidden"
                 >
                   {/* Header with Profile Image and Basic Info */}
                   <div className="relative">
                     {/* Cover Photo */}
-                    <div className="h-32 bg-gradient-to-r from-[#8B0000] to-[#6B0000] w-full"></div>
+                    <div className="h-28 bg-gradient-to-r from-[#8B0000] to-[#B91C1C] w-full"></div>
                     
                     {/* Profile Image */}
-                    <div className="absolute -bottom-10 left-6 w-20 h-20 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
+                    <div className="absolute -bottom-8 left-6 w-16 h-16 rounded-full border-4 border-white bg-white shadow-md overflow-hidden">
                       <div className="w-full h-full bg-gray-100 flex items-center justify-center">
                         <Image
                           src={`/${alum.image}`}
                           alt={`${alum.name}, ${alum.currentRole} at ${alum.company}`}
-                          width={80}
-                          height={80}
+                          width={64}
+                          height={64}
                           className="w-full h-full object-cover"
                           priority={index < 4}
                         />
                       </div>
                     </div>
-                    
-                    {/* View More Button */}
-                    <div className="absolute right-4 bottom-4">
-                      <button 
-                        onClick={() => openModal(alum)}
-                        className="px-3 py-1.5 bg-white hover:bg-gray-50 text-sm font-medium text-[#8B0000] rounded-full border border-[#8B0000]/20 hover:border-[#8B0000]/40 transition-all shadow-sm flex items-center space-x-1.5"
-                        aria-label={`View ${alum.name}'s profile`}
-                      >
-                        <span>View More</span>
-                        <ChevronRight className="w-3.5 h-3.5 mt-0.5" />
-                      </button>
-                    </div>
                   </div>
                   
                   {/* Content */}
-                  <div className="pt-10 pb-6 px-6 flex-1 flex flex-col">
+                  <div className="pt-10 pb-5 px-6 flex-1 flex flex-col">
                     {/* Name and Role */}
-                    <div className="mb-1">
-                      <h3 className="text-lg font-bold text-gray-900">{alum.name}</h3>
+                    <div className="mb-3">
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#8B0000] transition-colors">{alum.name}</h3>
                       <p className="text-sm text-gray-600">{alum.currentRole}</p>
                       <p className="text-xs text-[#8B0000] font-medium mt-1">Class of {alum.graduationYear}</p>
-                      <div className="w-12 h-0.5 bg-gray-200 my-3"></div>
+                      <div className="w-8 h-0.5 bg-gray-200 my-3"></div>
                     </div>
                     
-                    {/* Spacer */}
-                    <div className="h-4"></div>
-                    
                     {/* Testimonial Preview */}
-                    <div className="mb-4 flex-1 min-h-[4.5rem]">
+                    <div className="mb-4 flex-1">
                       <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
                         "{alum.testimonial}"
                       </p>
                     </div>
                     
                     {/* Action Buttons */}
-                    <div className="flex items-center justify-between border-t border-gray-100 pt-3 px-1">
-                      <div className="flex items-center">
+                    <div className="mt-auto pt-3 border-t border-gray-100">
+                      <div className="flex items-center justify-between">
                         <button 
-                          onClick={() => {
-                            // Implement share functionality
-                            if (navigator.share) {
-                              navigator.share({
-                                title: `SMU Gavel Club Alumnus: ${alum.name}`,
-                                text: `Check out ${alum.name}'s journey from SMU Gavel Club to ${alum.currentRole}`,
-                                url: window.location.href,
-                              }).catch(console.error);
-                            } else {
-                              // Fallback for browsers that don't support Web Share API
-                              navigator.clipboard.writeText(window.location.href);
-                              alert('Link copied to clipboard!');
-                            }
-                          }}
-                          className="flex items-center space-x-1.5 py-1.5 px-3 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
+                          onClick={() => openModal(alum)}
+                          className="text-sm font-medium text-[#8B0000] hover:text-[#660000] transition-colors flex items-center group"
                         >
-                          <Share2 className="w-5 h-5" size={18} strokeWidth={1.5} />
-                          <span>Share</span>
+                          <span>View profile</span>
+                          <ArrowRight className="w-4 h-4 ml-1 mt-0.5 group-hover:translate-x-1 transition-transform" />
                         </button>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        {alum.linkedin && (
-                          <a 
-                            href={alum.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 transition-colors hover:text-[#0A66C2]"
-                            aria-label={`${alum.name}'s LinkedIn`}
-                          >
-                            <Linkedin className="w-5 h-5" />
-                          </a>
-                        )}
-                        {alum.email && (
-                          <a 
-                            href={`mailto:${alum.email}`}
-                            className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 transition-colors hover:text-[#EA4335]"
-                            aria-label={`Email ${alum.name}`}
-                          >
-                            <Mail className="w-5 h-5" />
-                          </a>
-                        )}
+                        
+                        <div className="flex items-center space-x-2">
+                          {alum.linkedin && (
+                            <a 
+                              href={alum.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 transition-colors hover:text-[#0A66C2]"
+                              aria-label={`${alum.name}'s LinkedIn`}
+                            >
+                              <Linkedin className="w-4 h-4" />
+                            </a>
+                          )}
+                          {alum.email && (
+                            <a 
+                              href={`mailto:${alum.email}`}
+                              className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 transition-colors hover:text-[#EA4335]"
+                              aria-label={`Email ${alum.name}`}
+                            >
+                              <Mail className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
