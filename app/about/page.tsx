@@ -239,7 +239,7 @@ const AboutPage = (): JSX.Element => {
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 }}
                 >
-                    Founded in 2023, the SMU Gavel Club began as a small group of passionate students dedicated to mastering the art of public speaking. What started as a modest gathering has flourished into one of the most vibrant and respected clubs on campus.
+                    Founded in August 2023, the SMU Gavel Club became Ethiopia's first school-based Gavel Club under Toastmasters International. With guidance from Distinguished Toastmasters Betlehem Nessibu and Mekedela Mekuria, a seven-member executive team laid the groundwork for a bold new chapter in student leadership.
                 </motion.p>
                 <motion.p 
                   className="text-lg"
@@ -248,7 +248,7 @@ const AboutPage = (): JSX.Element => {
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 }}
                 >
-                    Over the years, we've hosted numerous workshops, competitions, and speaking events, helping hundreds of students develop their communication and leadership skills. Our alumni have gone on to achieve great success in various professional fields, a testament to the strong foundation built during their time with us.
+                    In just one year, we've hosted 17 bi-monthly sessions, 5 Speech Craft trainings, 2 speech competitions, and multiple leadership workshops—helping over 100 students become confident speakers and capable leaders. What started as a vision quickly became a movement.
                 </motion.p>
               </motion.div>
             </motion.div>
