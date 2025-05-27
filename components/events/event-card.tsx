@@ -45,11 +45,16 @@ export function EventCard({ event, isSelected = false, onClick, className }: Eve
                 event.type === 'contest' ? '/events/upcoming/upcoming_2.png' :
                 event.type === 'ceremony' ? '/events/upcoming/upcoming_3.png' :
                 event.type === 'networking' ? '/events/upcoming/upcoming_4.png' :
-                '/events/past/past_1.jpg')} 
+                `/events/past/past_${event.id}.jpg`)} 
           alt={event.title} 
           fill 
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          onError={(e) => {
+            // Fallback to a default image if the specified one doesn't exist
+            const target = e.target as HTMLImageElement;
+            target.src = '/events/past/past_1.jpg';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 p-4 w-full">
@@ -90,13 +95,14 @@ export function EventCard({ event, isSelected = false, onClick, className }: Eve
         
         <div className="mt-auto pt-4 border-t border-gray-100">
           <Button 
-            asChild
             variant="outline"
-            className="w-full border-[#8B0000] text-[#8B0000] hover:bg-[#8B0000]/5 hover:text-[#8B0000]"
+            disabled
+            className="w-full border-gray-300 text-gray-400 cursor-not-allowed bg-gray-50"
+            onClick={(e) => e.preventDefault()}
           >
-            <Link href={`/events/${event.id}`} className="flex items-center justify-center">
+            <span className="flex items-center justify-center">
               View Details <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            </span>
           </Button>
         </div>
       </div>

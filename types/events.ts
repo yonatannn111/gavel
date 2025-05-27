@@ -29,6 +29,7 @@ export const eventTypes: Record<EventType, EventTypeConfig> = {
 // Helper to get event image path
 export const getEventImage = (type: 'upcoming' | 'past', id: number): string => {
   const basePath = '/events';
+  // For past events, always use jpg as all past event images are in jpg format
   const ext = type === 'upcoming' && id <= 4 ? 'png' : 'jpg';
   return `${basePath}/${type}/${type}_${id}.${ext}`;
 };
@@ -86,7 +87,7 @@ export const pastEvents: Event[] = [
     location: "NUS University Town",
     description: "A collaborative event with other university Toastmasters clubs, featuring speech competitions and networking opportunities.",
     type: 'contest',
-    image: getEventImage('past', 1)
+    image: getEventImage('past', 5)
   },
   {
     id: 6,
