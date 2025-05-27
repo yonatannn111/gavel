@@ -102,19 +102,19 @@ export default function EventsPage() {
                 </p>
               </div>
               
-              <Tabs defaultValue="upcoming" className="w-full sm:w-auto">
-                <TabsList className="bg-gray-100 p-1.5 rounded-xl">
+              <Tabs defaultValue="upcoming">
+                <TabsList className="bg-gray-100 p-1 rounded-lg inline-flex">
                   <TabsTrigger 
                     value="upcoming" 
-                    className="data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-600 rounded-lg px-4 py-2 text-sm font-medium transition-all"
                     onClick={() => setActiveTab('upcoming')}
+                    className="data-[state=active]:bg-white data-[state=active]:text-[#8B0000] data-[state=active]:shadow-sm rounded-md px-6 py-2 text-sm font-medium transition-all"
                   >
                     Upcoming
                   </TabsTrigger>
                   <TabsTrigger 
                     value="past" 
-                    className="data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-600 rounded-lg px-4 py-2 text-sm font-medium transition-all"
                     onClick={() => setActiveTab('past')}
+                    className="data-[state=active]:bg-white data-[state=active]:text-[#8B0000] data-[state=active]:shadow-sm rounded-md px-6 py-2 text-sm font-medium transition-all"
                   >
                     Past Events
                   </TabsTrigger>

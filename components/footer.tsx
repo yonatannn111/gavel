@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Instagram, Mail, MapPin, Phone, Clock, Youtube, Linkedin, MessageCircle } from "lucide-react";
+import { Instagram, Mail, MapPin, Phone, Clock, Youtube, Linkedin } from "lucide-react";
+import { FaTiktok, FaTelegram } from "react-icons/fa6";
 
 const footerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -44,7 +45,8 @@ export default function Footer() {
             <div className="flex space-x-4 pt-2">
               {[
                 { icon: Instagram, href: "https://www.instagram.com/smu_gavel_club?igsh=cHRpOWIwdjN1eGkw&utm_source=qr", label: "Instagram" },
-                { icon: MessageCircle, href: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                { icon: FaTiktok, href: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                { icon: FaTelegram, href: "https://t.me/StMarysGavelClub", label: "Telegram" },
                 { icon: Linkedin, href: "https://www.linkedin.com/groups/13246137/", label: "LinkedIn" },
                 { icon: Youtube, href: "#", label: "YouTube", onClick: (e: React.MouseEvent) => {
                   e.preventDefault();
