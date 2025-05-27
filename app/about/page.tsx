@@ -36,6 +36,7 @@ interface AnimationVariants {
 interface CommitteeMember {
   name: string;
   role: string;
+  displayRole: string;
   image: string;
 }
 
@@ -72,36 +73,43 @@ const executiveCommittee: CommitteeMember[] = [
   {
     name: "Nigist Kidane",
     role: "President",
+    displayRole: "Club President",
     image: "/members/president.jpg"
   },
   {
     name: "Selam Meseret",
     role: "Vice President Education",
+    displayRole: "Education Lead",
     image: "/members/education.jpg"
   },
   {
     name: "Hermela Yohannes",
     role: "Vice President Public Relations",
+    displayRole: "PR & Communications",
     image: "/members/relations.jpeg"
   },
   {
     name: "Tewodros Adane",
     role: "Vice President Membership",
+    displayRole: "Membership Lead",
     image: "/members/membership.jpg"
   },
   {
     name: "Atnatewos Hailealem",
     role: "Secretary",
+    displayRole: "Club Secretary",
     image: "/members/secretary.jpeg"
   },
   {
     name: "Yonatan Getachew",
     role: "Treasurer",
+    displayRole: "Finance Lead",
     image: "/members/Treasurer.jpg"
   },
   {
     name: "Khalid Ahmed",
     role: "Sergeant at Arms",
+    displayRole: "Logistics Lead",
     image: "/members/sergent.jpeg"
   }
 ];
@@ -330,7 +338,7 @@ const AboutPage = (): JSX.Element => {
             {executiveCommittee.map((member, index) => (
               <motion.div
                 key={member.name}
-                className="group"
+                className="group relative"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -341,12 +349,15 @@ const AboutPage = (): JSX.Element => {
                     src={member.image} 
                     alt={member.name}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="object-cover group-hover:scale-105 transition-all duration-500"
                   />
+                  <span className="absolute top-4 right-4 bg-[#8B0000] text-white text-xs font-medium px-3 py-1 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md">
+                    {member.role}
+                  </span>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div>
+                    <div className="w-full">
                       <h4 className="text-white text-xl font-bold">{member.name}</h4>
-                      <p className="text-gray-200">{member.role}</p>
+                      <p className="text-white/80 font-medium text-sm">{member.displayRole}</p>
                     </div>
                   </div>
                 </div>
