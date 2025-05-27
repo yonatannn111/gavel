@@ -15,6 +15,7 @@ import {
   Users as UsersIcon 
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 // Type definitions
@@ -38,6 +39,7 @@ type MemberProgress = {
   completedSpeeches: number;
   nextMilestone: string;
   avatar: string;
+  image: string;
 };
 
 export default function ProgressionPage() {
@@ -164,12 +166,61 @@ export default function ProgressionPage() {
     ]
   };
 
+  const ProgressBar = ({ progress }: { progress: number }) => {
+    const totalSpeeches = 10; // Total speeches in CC manual
+    const percentage = Math.min(100, Math.round((progress / totalSpeeches) * 100));
+    
+    return (
+      <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div 
+          className="bg-gradient-to-r from-[#8B0000] to-[#FF6B6B] h-2.5 rounded-full transition-all duration-500 ease-out"
+          style={{ width: `${percentage}%` }}
+        ></div>
+      </div>
+    );
+  };
+
   const leaderboard: MemberProgress[] = [
-    { name: 'Yohanes Jember', role: 'Member', completedSpeeches: 10, nextMilestone: 'Competent Communicator', avatar: '/avatars/alex.jpg' },
-    { name: 'Rediet Asfaw', role: 'Member', completedSpeeches: 7, nextMilestone: 'Competent Communicator', avatar: '/avatars/sarah.jpg' },
-    { name: 'Khalid Ahmed', role: 'Sergeant at Arms', completedSpeeches: 5, nextMilestone: 'Competent Communicator', avatar: '/avatars/michael.jpg' },
-    { name: 'Emma Davis', role: 'Secretary', completedSpeeches: 3, nextMilestone: 'Competent Communicator', avatar: '/avatars/emma.jpg' },
-    { name: 'James Wilson', role: 'Member', completedSpeeches: 2, nextMilestone: 'Competent Communicator', avatar: '/avatars/james.jpg' },
+    {
+      name: 'TM Yohanis Jember',
+      role: 'Member',
+      completedSpeeches: 2,
+      nextMilestone: '3 speeches',
+      image: '/cc-leaderboard/cc-speech-jo.jpg',
+      avatar: 'YJ'
+    },
+    {
+      name: 'TM Natnael Nurhusen',
+      role: 'Member',
+      completedSpeeches: 2,
+      nextMilestone: '3 speeches',
+      image: '/cc-leaderboard/cc-speech-nati.jpg',
+      avatar: 'NN'
+    },
+    {
+      name: 'TM Naol Melaku',
+      role: 'Member',
+      completedSpeeches: 2,
+      nextMilestone: '3 speeches',
+      image: '/cc-leaderboard/cc-speech-naol.PNG',
+      avatar: 'NM'
+    },
+    {
+      name: 'TM Tewodros Adane',
+      role: 'Vice President Membership',
+      completedSpeeches: 1,
+      nextMilestone: '2 speeches',
+      image: '/members/membership.jpg',
+      avatar: 'TA'
+    },
+    {
+      name: 'TM Yonatan Getachew',
+      role: 'Treasurer',
+      completedSpeeches: 1,
+      nextMilestone: '2 speeches',
+      image: '/members/Treasurer.jpg',
+      avatar: 'YG'
+    }
   ];
 
   return (
@@ -392,26 +443,42 @@ export default function ProgressionPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="grid grid-cols-12 bg-gray-50 border-b border-gray-100 p-4 font-medium text-gray-500 text-sm">
               <div className="col-span-1">#</div>
-              <div className="col-span-5">Member</div>
+              <div className="col-span-4">Member</div>
               <div className="col-span-3 text-center">Role</div>
-              <div className="col-span-3 text-right">Speeches</div>
+              <div className="col-span-4 text-right">Progress</div>
             </div>
             {leaderboard.map((member, index) => (
               <div key={index} className="grid grid-cols-12 items-center p-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
                 <div className="col-span-1 font-medium text-gray-500">{index + 1}</div>
-                <div className="col-span-5 flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-medium mr-3">
-                    {member.name.split(' ').map(n => n[0]).join('')}
+                <div className="col-span-4 flex items-center">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 mr-3">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      width={40}
+                      height={40}
+                      className="object-cover w-full h-full"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.avatar)}&background=8B0000&color=fff`;
+                      }}
+                    />
                   </div>
-                  <div>
-                    <div className="font-medium text-gray-900">{member.name}</div>
+                  <div className="truncate">
+                    <div className="font-medium text-gray-900 truncate">{member.name}</div>
+                    <div className="text-xs text-gray-500">{member.completedSpeeches}/10 speeches</div>
                   </div>
                 </div>
-                <div className="col-span-3 text-center text-sm text-gray-500">{member.role}</div>
-                <div className="col-span-3 text-right">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#8B0000]/10 text-[#8B0000] font-medium text-sm">
-                    {member.completedSpeeches}
-                  </span>
+                <div className="col-span-3 text-center text-sm text-gray-500 px-2">{member.role}</div>
+                <div className="col-span-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1">
+                      <ProgressBar progress={member.completedSpeeches} />
+                    </div>
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#8B0000]/10 text-[#8B0000] font-medium text-sm flex-shrink-0">
+                      {member.completedSpeeches}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
