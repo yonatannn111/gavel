@@ -13,7 +13,7 @@ const routes = [
     href: "/about", 
     label: "About Us",
     submenu: [
-      { href: "/about#overview", label: "Overview" },
+      { href: "/about", label: "Overview" },
       { href: "/about#history", label: "Our History" },
       { href: "/about#values", label: "Our Values" },
       { href: "/about#team", label: "Our Team" },
