@@ -27,9 +27,9 @@ import {
   User,
   HelpCircle,
   Award,
-  Mic
+  Mic,
+  MessageCircle
 } from "lucide-react";
-import { FaTiktok, FaTelegram } from "react-icons/fa6";
 import { fadeInUpVariant, staggerContainer } from "../AnimatedContent";
 
 export default function ContactPage() {
@@ -258,40 +258,38 @@ export default function ContactPage() {
                   )}
                   
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-gray-700">Your Name</Label>
-                        <div className="relative">
-                          <Input
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="John Doe"
-                            className="pl-10 w-full"
-                            required
-                          />
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <User className="h-4 w-4 text-gray-400" />
-                          </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-gray-700">Your Name</Label>
+                      <div className="relative">
+                        <Input
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="John Doe"
+                          className="pl-10"
+                          required
+                        />
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-4 w-4 text-gray-400" />
                         </div>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="text-gray-700">Email Address</Label>
-                        <div className="relative">
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="john.doe@example.com"
-                            className="pl-10 w-full"
-                            required
-                          />
-                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-gray-700">Email Address</Label>
+                      <div className="relative">
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="john.doe@example.com"
+                          className="pl-10"
+                          required
+                        />
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                       </div>
                     </div>
                     
@@ -398,8 +396,7 @@ export default function ContactPage() {
                     <div className="flex space-x-3">
                       {[
                         { icon: Instagram, url: "https://www.instagram.com/smu_gavel_club?igsh=cHRpOWIwdjN1eGkw&utm_source=qr", label: "Instagram" },
-                        { icon: FaTiktok, url: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
-                        { icon: FaTelegram, url: "https://t.me/StMarysGavelClub", label: "Telegram" },
+                        { icon: MessageCircle, url: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
                         { icon: Linkedin, url: "https://www.linkedin.com/groups/13246137/", label: "LinkedIn" },
                         { icon: Youtube, 
                           url: "#", 

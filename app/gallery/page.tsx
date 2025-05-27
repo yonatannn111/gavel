@@ -37,15 +37,17 @@ const ImageSkeleton = () => (
   <div className="aspect-[3/2] bg-gray-100 rounded-xl animate-pulse"></div>
 );
 
-// Image card component
+// Image card component with bento grid layout
 const GalleryImageCard = ({
   image,
   onClick,
   className = "",
+  size = "md"
 }: {
   image: GalleryImage;
   onClick: () => void;
   className?: string;
+  size?: "sm" | "md" | "lg";
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [imgSrc, setImgSrc] = useState(image.src);
@@ -56,93 +58,72 @@ const GalleryImageCard = ({
     setImgSrc(randomFallback);
   };
 
+  const sizeClasses = {
+    sm: "row-span-1",
+    md: "row-span-2",
+    lg: "row-span-3"
+  };
+
   return (
-    <div
-      className={cn("group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 bg-white cursor-pointer flex flex-col h-full border border-gray-100 hover:border-gray-200", className)}
+    <motion.div
+      className={cn(
+        "relative overflow-hidden rounded-xl bg-gray-100 cursor-pointer",
+        "transition-all duration-300 hover:shadow-lg hover:scale-[1.02]",
+        sizeClasses[size],
+        className
+      )}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
-      <div className="aspect-[3/2] relative bg-gray-100">
+      <div className="w-full h-full relative">
         <Image
           src={imgSrc}
           alt={image.alt}
           fill
           className={cn(
-            "object-cover transition-opacity duration-300",
-            isLoading ? "opacity-0" : "opacity-100"
+            "object-cover transition-all duration-700",
+            isLoading ? "opacity-0" : "opacity-100",
+            isHovered ? "scale-105" : "scale-100"
           )}
           onLoad={() => setIsLoading(false)}
           onError={handleError}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 768px) 100vw, 50vw"
           priority={image.featured}
         />
+        
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
             <div className="w-8 h-8 border-4 border-gray-300 border-t-[#8B0000] rounded-full animate-spin"></div>
           </div>
         )}
         
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="text-white text-left">
+                <h3 className="font-semibold text-white drop-shadow-md">{image.title}</h3>
+                <p className="text-sm text-white/90 line-clamp-1">{image.description}</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
         {image.featured && (
-          <div className="absolute top-3 left-3 bg-[#8B0000] text-white text-xs font-medium px-2 py-1 rounded-full">
+          <div className="absolute top-3 right-3 bg-[#8B0000] text-white text-xs font-medium px-2 py-1 rounded-full shadow-md">
             Featured
           </div>
         )}
       </div>
-      
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-900 line-clamp-1">{image.title}</h3>
-        <p className="text-sm text-gray-500 mt-1 line-clamp-2">{image.description}</p>
-        
-        <div className="flex items-center mt-2 text-xs text-gray-500">
-          <Calendar className="w-3.5 h-3.5 mr-1" />
-          <span>{image.date}</span>
-          {image.location && (
-            <>
-              <MapPin className="w-3.5 h-3.5 ml-3 mr-1" />
-              <span className="truncate">{image.location.split(',')[0]}</span>
-            </>
-          )}
-        </div>
-        
-        {image.tags && image.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {image.tags.slice(0, 2).map((tag, idx) => (
-              <span 
-                key={idx}
-                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
-              >
-                <TagIcon className="w-3 h-3 mr-1" />
-                {tag}
-              </span>
-            ))}
-            {image.tags.length > 2 && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
-                +{image.tags.length - 2}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-      
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div 
-            className="absolute inset-0 bg-black/60 flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="text-white text-center p-4">
-              <div className="bg-white/20 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center mb-2 mx-auto">
-                <ImageIcon className="w-6 h-6" />
-              </div>
-              <span className="font-medium">View Details</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 
@@ -318,52 +299,71 @@ export default function GalleryPage() {
       {/* Gallery Section */}
       <section id="gallery-grid" className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Filter Buttons */}
-          <motion.div 
-            className="flex flex-wrap justify-center gap-2 mb-8 md:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-          >
+          {/* Filter Tabs */}
+          <div className="flex flex-wrap justify-center gap-2 mb-12">
             {categories.map((category) => (
-              <motion.button
+              <button
                 key={category.id}
                 onClick={() => setFilter(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={cn(
+                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                  "border-2 border-transparent",
                   filter === category.id
-                    ? "bg-[#8B0000] text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                    ? "bg-[#8B0000] text-white border-[#8B0000] shadow-md"
+                    : "bg-white text-gray-700 hover:border-gray-300 hover:shadow-sm"
+                )}
               >
                 {category.name}
-              </motion.button>
+              </button>
             ))}
-          </motion.div>
+          </div>
           
-          {/* Gallery Grid */}
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, staggerChildren: 0.05, delayChildren: 0.2 }}
-          >
-            {filteredImages.slice(0, visibleCount).map((image, index) => (
-              <motion.div
-                key={image.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.05 * (index % 12) }}
-                className="h-full"
-              >
-                <GalleryImageCard
-                  image={image}
-                  onClick={() => openLightbox(image.id)}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
+          {/* Bento Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] gap-4">
+            {filteredImages.slice(0, visibleCount).map((image, index) => {
+              // Create a pattern of different sizes for visual interest
+              const patternIndex = index % 8; // Repeat the pattern every 8 items
+              let size: "sm" | "md" | "lg" = "md";
+              let colSpan = "col-span-1";
+              let rowSpan = "row-span-1";
+              
+              // Define the pattern for different sizes and spans
+              if (patternIndex === 0 || patternIndex === 7) {
+                // Large items that span 2x2
+                size = "lg";
+                colSpan = "col-span-2";
+                rowSpan = "row-span-2";
+              } else if (patternIndex === 3 || patternIndex === 5) {
+                // Small square items
+                size = "sm";
+              } else {
+                // Medium items (default)
+                size = "md";
+              }
+              
+              // Ensure the first item is always large on medium screens and up
+              const firstItemClass = index === 0 ? "md:row-span-2" : "";
+              
+              return (
+                <div 
+                  key={image.id} 
+                  className={cn(
+                    "relative group",
+                    colSpan,
+                    rowSpan,
+                    firstItemClass
+                  )}
+                >
+                  <GalleryImageCard
+                    image={image}
+                    size={size}
+                    onClick={() => openLightbox(image.id)}
+                    className="h-full w-full"
+                  />
+                </div>
+              );
+            })}
+          </div>
           
           {/* Load More Button */}
           {visibleCount < filteredImages.length && (
@@ -467,7 +467,7 @@ export default function GalleryPage() {
                           variant="outline"
                           size="sm"
                           onClick={handleShare}
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 text-gray-900 hover:text-white hover:bg-[#8B0000] border-[#8B0000]"
                         >
                           <Share2 className="w-4 h-4" />
                           <span>Share</span>
@@ -477,6 +477,7 @@ export default function GalleryPage() {
                         variant="outline"
                         size="sm"
                         asChild
+                        className="text-gray-900 hover:text-white hover:bg-[#8B0000] border-[#8B0000]"
                       >
                         <a 
                           href={currentImage.src} 
