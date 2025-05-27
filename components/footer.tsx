@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Instagram, Mail, MapPin, Phone, Clock, Youtube, Linkedin, MessageCircle } from "lucide-react";
+import { Instagram, Mail, MapPin, Phone, Clock, Youtube, Linkedin, MessageSquare } from "lucide-react";
+import { FaTelegram, FaTiktok } from "react-icons/fa";
 
 const footerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -44,27 +45,37 @@ export default function Footer() {
             <div className="flex space-x-4 pt-2">
               {[
                 { icon: Instagram, href: "https://www.instagram.com/smu_gavel_club?igsh=cHRpOWIwdjN1eGkw&utm_source=qr", label: "Instagram" },
-                { icon: MessageCircle, href: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                { icon: FaTiktok, href: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                { icon: FaTelegram, href: "https://t.me/StMarysGavelClub", label: "Telegram" },
                 { icon: Linkedin, href: "https://www.linkedin.com/groups/13246137/", label: "LinkedIn" },
-                { icon: Youtube, href: "#", label: "YouTube", onClick: (e: React.MouseEvent) => {
-                  e.preventDefault();
-                  alert('YouTube coming soon!');
-                } }
-              ].map(({ icon: Icon, href, label }, index) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                  aria-label={label}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  custom={index}
-                  variants={footerVariants}
-                >
-                  <Icon className="h-5 w-5 text-white" />
-                </motion.a>
+                { icon: Youtube, href: "#", label: "YouTube", disabled: true }
+              ].map(({ icon: Icon, href, label, disabled = false }, index) => (
+                disabled ? (
+                  <motion.span
+                    key={label}
+                    className="bg-white/10 p-2 rounded-full opacity-50 cursor-default"
+                    aria-label={label}
+                    custom={index}
+                    variants={footerVariants}
+                  >
+                    <Icon className="h-5 w-5 text-white" />
+                  </motion.span>
+                ) : (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                    aria-label={label}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    custom={index}
+                    variants={footerVariants}
+                  >
+                    <Icon className="h-5 w-5 text-white" />
+                  </motion.a>
+                )
               ))}
             </div>
           </motion.div>
@@ -221,9 +232,9 @@ export default function Footer() {
           </motion.p>
           <div className="flex space-x-6">
             {[
-              { name: 'Privacy Policy', href: '/privacy' },
-              { name: 'Terms of Service', href: '/terms' },
-              { name: 'Cookie Policy', href: '/cookies' }
+              { name: 'Privacy Policy' },
+              { name: 'Terms of Service' },
+              { name: 'Cookie Policy' }
             ].map((item, index) => (
               <motion.div
                 key={item.name}
@@ -232,12 +243,9 @@ export default function Footer() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 + (index * 0.1) }}
               >
-                <Link 
-                  href={item.href} 
-                  className="text-sm text-gray-300 hover:text-white transition-colors"
-                >
+                <span className="text-sm text-gray-400 cursor-default">
                   {item.name}
-                </Link>
+                </span>
               </motion.div>
             ))}
           </div>

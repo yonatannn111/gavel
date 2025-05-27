@@ -27,9 +27,9 @@ import {
   User,
   HelpCircle,
   Award,
-  Mic,
-  MessageCircle
+  Mic
 } from "lucide-react";
+import { FaTelegram, FaTiktok } from "react-icons/fa";
 import { fadeInUpVariant, staggerContainer } from "../AnimatedContent";
 
 export default function ContactPage() {
@@ -396,28 +396,32 @@ export default function ContactPage() {
                     <div className="flex space-x-3">
                       {[
                         { icon: Instagram, url: "https://www.instagram.com/smu_gavel_club?igsh=cHRpOWIwdjN1eGkw&utm_source=qr", label: "Instagram" },
-                        { icon: MessageCircle, url: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                        { icon: FaTiktok, url: "https://www.tiktok.com/@gavelc1?_t=ZM-8wVa1kTxL1k&_r=1", label: "TikTok" },
+                        { icon: FaTelegram, url: "https://t.me/StMarysGavelClub", label: "Telegram" },
                         { icon: Linkedin, url: "https://www.linkedin.com/groups/13246137/", label: "LinkedIn" },
-                        { icon: Youtube, 
-                          url: "#", 
-                          label: "YouTube",
-                          onClick: (e: React.MouseEvent) => {
-                            e.preventDefault();
-                            alert('YouTube coming soon!');
-                          } 
-                        }
-                      ].map((social) => (
-                        <a
-                          key={social.label}
-                          href={social.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[#8B0000] hover:text-white transition-colors"
-                          aria-label={social.label}
-                        >
-                          <social.icon className="h-5 w-5" />
-                        </a>
-                      ))}
+                        { icon: Youtube, url: "#", label: "YouTube", disabled: true }
+                      ].map(({ icon: Icon, url, label, disabled = false }) =>
+                        disabled ? (
+                          <span
+                            key={label}
+                            className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 text-gray-400 opacity-50 cursor-default"
+                            aria-label={label}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </span>
+                        ) : (
+                          <a
+                            key={label}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[#8B0000] hover:text-white transition-colors"
+                            aria-label={label}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </a>
+                        )
+                      )}
                     </div>
                   </div>
                 </div>
