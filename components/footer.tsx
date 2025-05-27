@@ -1,6 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Instagram, Mail, MapPin, Phone, Clock, Youtube, Linkedin, MessageSquare } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Instagram, Mail, MapPin, Phone, Clock, Youtube, Linkedin, MessageSquare, CheckCircle } from "lucide-react";
 import { FaTelegram, FaTiktok } from "react-icons/fa";
 
 const footerVariants = {
@@ -18,6 +21,28 @@ const footerVariants = {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      setEmail("");
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+    }, 1000);
+  };
 
   return (
     <footer className="bg-gradient-to-b from-[#8B0000] to-[#600000] text-white pt-16 pb-8 md:pt-20">
@@ -197,20 +222,53 @@ export default function Footer() {
             <p className="text-gray-200 mb-4">
               Subscribe to our newsletter for the latest updates and events.
             </p>
-            <form className="space-y-3">
+            
+            <AnimatePresence>
+              {isSubmitted && (
+                <motion.div 
+                  className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-md mb-4 flex items-start"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <CheckCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Successfully Subscribed!</p>
+                    <p className="text-sm">Thank you for subscribing to our newsletter.</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
+            <form onSubmit={handleNewsletterSubmit} className="space-y-3">
               <div>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email address"
                   className="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium py-2.5 px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-[#8B0000]"
+                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium py-2.5 px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-[#8B0000] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                disabled={isSubmitting || !email.trim()}
               >
-                Subscribe
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Subscribing...
+                  </span>
+                ) : (
+                  'Subscribe'
+                )}
               </button>
             </form>
           </motion.div>
