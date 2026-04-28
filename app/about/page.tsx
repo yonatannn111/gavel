@@ -68,52 +68,6 @@ const staggerContainer: AnimationVariants = {
   }
 };
 
-// Data
-const executiveCommittee: CommitteeMember[] = [
-  {
-    name: "Nigist Kidane",
-    role: "President",
-    displayRole: "Club President",
-    image: "/members/president.jpg"
-  },
-  {
-    name: "Selam Meseret",
-    role: "Vice President Education",
-    displayRole: "Education Lead",
-    image: "/members/education.jpg"
-  },
-  {
-    name: "Hermela Yohannes",
-    role: "Vice President Public Relations",
-    displayRole: "PR & Communications",
-    image: "/members/relations.jpeg"
-  },
-  {
-    name: "Tewodros Adane",
-    role: "Vice President Membership",
-    displayRole: "Membership Lead",
-    image: "/members/membership.jpg"
-  },
-  {
-    name: "Atnatewos Hailealem",
-    role: "Secretary",
-    displayRole: "Club Secretary",
-    image: "/members/secretary.jpeg"
-  },
-  {
-    name: "Yonatan Getachew",
-    role: "Treasurer",
-    displayRole: "Finance Lead",
-    image: "/members/Treasurer.jpg"
-  },
-  {
-    name: "Khalid Ahmed",
-    role: "Sergeant at Arms",
-    displayRole: "Logistics Lead",
-    image: "/members/sergent.jpeg"
-  }
-];
-
 const values: ValueItem[] = [
   {
     title: "Excellence",
